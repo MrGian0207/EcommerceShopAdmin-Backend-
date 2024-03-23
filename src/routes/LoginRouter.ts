@@ -1,9 +1,11 @@
+import { log } from 'console';
 import LoginController from '../admin/controllers/LoginController';
 import { Router } from 'express';
 
 const loginController = new LoginController();
 const loginRouter = Router();
 
-loginRouter.post('/login', loginController.login);
+loginRouter.post('/auth/login', loginController.login);
+loginRouter.get('/index', loginController.index);
 
 export default loginRouter;

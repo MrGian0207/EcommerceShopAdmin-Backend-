@@ -41,12 +41,14 @@ class LoginController {
             const data = req.body;
             //JsonWebToken
             const accessToken = jsonwebtoken_1.default.sign(data, process.env.ACCESS_TOKEN_SECRET_KEY, {
-                expiresIn: '60s',
+                expiresIn: '30s',
             });
             const refreshToken = jsonwebtoken_1.default.sign(data, process.env.REFRESH_TOKEN_SECRET_KEY);
             //Clear whitespace
-            const Email = emailAddress.trim();
-            const Password = password.trim();
+            const Email = emailAddress ? emailAddress.trim() : '';
+            const Password = password ? password === null || password === void 0 ? void 0 : password.trim() : '';
+            const currentDate = new Date();
+            currentDate.setDate(currentDate.getDate() + 365);
             const existed_User = yield UserModel_1.default.findOne({
                 emailAddress: Email,
             });
@@ -60,11 +62,14 @@ class LoginController {
                         createdAt: Date.now(),
                     });
                     yield newUserRefreshToken.save();
-                    res.status(200).json({
-                        response: User.Success,
-                        accessToken,
-                        refreshToken,
+                    res.cookie('refreshToken', refreshToken, {
+                        httpOnly: true,
+                        secure: false,
+                        path: '/',
+                        sameSite: 'strict',
+                        expires: currentDate,
                     });
+                    res.status(200).json({ response: User.Success, accessToken });
                 }
                 else {
                     res.status(406).json(User.Error.Password_Incorrect);
@@ -74,6 +79,10 @@ class LoginController {
                 res.status(406).json(User.Error.Email_isNotRegisterd);
             }
         });
+    }
+    index(req, res) {
+        const RefreshToken = req.cookies.refreshToken;
+        res.send(RefreshToken);
     }
 }
 exports.default = LoginController;

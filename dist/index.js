@@ -8,10 +8,12 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const index_1 = __importDefault(require("./routes/index"));
 const connectionDB_1 = __importDefault(require("./config/connectionDB"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const app = (0, express_1.default)();
 //Connect to MongoDB
 (0, connectionDB_1.default)();
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({ credentials: true, origin: 'http://localhost:3000' }));
+app.use((0, cookie_parser_1.default)());
 //When be submitted by form
 app.use(express_1.default.urlencoded({ extended: true }));
 //for fetch, Https, exios when submitted

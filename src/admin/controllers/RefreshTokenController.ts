@@ -7,11 +7,11 @@ dotenv.config();
 
 class RefreshTokenController {
     async refreshToken(req: Request, res: Response) {
-        const { refreshToken } = req.body;
+        const RefreshToken = req.cookies.refreshToken;
         const userRefreshToken = await UserRefreshToken.findOne({
-            refreshToken: refreshToken,
+            refreshToken: RefreshToken,
         });
-        
+
         try {
             if (!userRefreshToken) {
                 res.status(401).json({
@@ -25,7 +25,7 @@ class RefreshTokenController {
                     },
                     process.env.ACCESS_TOKEN_SECRET_KEY as string,
                     {
-                        expiresIn: '60s',
+                        expiresIn: '30s',
                     },
                 );
                 res.status(200).json({

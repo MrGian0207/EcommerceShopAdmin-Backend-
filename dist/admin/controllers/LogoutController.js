@@ -18,28 +18,21 @@ dotenv_1.default.config();
 class LogoutController {
     logout(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { refreshToken } = req.body;
+            const RefreshToken = req.cookies.refreshToken;
             const userRefreshToken = yield UserRefreshTokenModel_1.default.findOne({
-                refreshToken: refreshToken,
+                refreshToken: RefreshToken,
             });
-            try {
-                if (userRefreshToken) {
-                    yield UserRefreshTokenModel_1.default.deleteOne({
-                        refreshToken: refreshToken,
-                    });
-                    res.status(200).json({ status: 'Logout' });
-                }
-                else {
-                    res.status(200).json({
-                        status: 'Error',
-                        message: 'RefreshToken Not Exitsted',
-                    });
-                }
+            if (userRefreshToken) {
+                yield UserRefreshTokenModel_1.default.deleteOne({
+                    refreshToken: RefreshToken,
+                });
+                res.clearCookie('refreshToken', { httpOnly: true });
+                res.status(200).json({ status: 'Logout' });
             }
-            catch (err) {
-                res.status(500).json({
+            else {
+                res.status(200).json({
                     status: 'Error',
-                    message: 'Internal server error',
+                    message: 'RefreshToken Not Exitsted',
                 });
             }
         });

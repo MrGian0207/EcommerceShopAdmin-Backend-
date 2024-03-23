@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 
 class DashboardController {
     async index(req: Request, res: Response) {
-        res.status(200).json({ status: 'Authortication', message: 'Nice!' });
+        res.status(200).json({ status: 'Success' });
     }
 }
 

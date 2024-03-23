@@ -34,7 +34,7 @@ class LoginController {
             data,
             process.env.ACCESS_TOKEN_SECRET_KEY as string,
             {
-                expiresIn: '60s',
+                expiresIn: '30s',
             },
         );
         const refreshToken = jwt.sign(
@@ -43,8 +43,11 @@ class LoginController {
         );
 
         //Clear whitespace
-        const Email = emailAddress.trim();
-        const Password = password.trim();
+        const Email = emailAddress ? emailAddress.trim() : '';
+        const Password = password ? password?.trim() : '';
+
+        const currentDate = new Date();
+        currentDate.setDate(currentDate.getDate() + 365);
 
         const existed_User = await UserModel.findOne({
             emailAddress: Email,
@@ -66,17 +69,26 @@ class LoginController {
 
                 await newUserRefreshToken.save();
 
-                res.status(200).json({
-                    response: User.Success,
-                    accessToken,
-                    refreshToken,
+                res.cookie('refreshToken', refreshToken, {
+                    httpOnly: true,
+                    secure: false,
+                    path: '/',
+                    sameSite: 'strict',
+                    expires: currentDate,
                 });
+
+                res.status(200).json({ response: User.Success, accessToken });
             } else {
                 res.status(406).json(User.Error.Password_Incorrect);
             }
         } else {
             res.status(406).json(User.Error.Email_isNotRegisterd);
         }
+    }
+
+    index(req: Request, res: Response) {
+        const RefreshToken = req.cookies.refreshToken;
+        res.send(RefreshToken);
     }
 }
 

@@ -7,9 +7,14 @@ import logoutRouter from './LogoutRouter';
 import { Express } from 'express';
 
 function Route(app: Express) {
-    app.use('/auth', registerRouter, loginRouter);
+    app.use('/', registerRouter);
 
-    app.use('/', dashboardRouter, refreshTokenRouter, logoutRouter);
+    app.use('/', loginRouter);
+
+    app.use('/', dashboardRouter);
+
+    app.use('/', refreshTokenRouter);
+
+    app.use('/', logoutRouter);
 }
-
 export default Route;

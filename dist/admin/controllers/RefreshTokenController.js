@@ -19,9 +19,9 @@ dotenv_1.default.config();
 class RefreshTokenController {
     refreshToken(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { refreshToken } = req.body;
+            const RefreshToken = req.cookies.refreshToken;
             const userRefreshToken = yield UserRefreshTokenModel_1.default.findOne({
-                refreshToken: refreshToken,
+                refreshToken: RefreshToken,
             });
             try {
                 if (!userRefreshToken) {
@@ -34,7 +34,7 @@ class RefreshTokenController {
                     const accessToken = jsonwebtoken_1.default.sign({
                         id: userRefreshToken.userId,
                     }, process.env.ACCESS_TOKEN_SECRET_KEY, {
-                        expiresIn: '60s',
+                        expiresIn: '30s',
                     });
                     res.status(200).json({
                         status: 'success',

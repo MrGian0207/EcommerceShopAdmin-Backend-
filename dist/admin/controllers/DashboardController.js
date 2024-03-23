@@ -13,7 +13,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 class DashboardController {
     index(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            res.status(200).json({ status: 'Authortication' });
+            res.status(200).json({ status: 'Success' });
         });
     }
 }

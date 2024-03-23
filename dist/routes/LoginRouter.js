@@ -7,5 +7,6 @@ const LoginController_1 = __importDefault(require("../admin/controllers/LoginCon
 const express_1 = require("express");
 const loginController = new LoginController_1.default();
 const loginRouter = (0, express_1.Router)();
-loginRouter.post('/login', loginController.login);
+loginRouter.post('/auth/login', loginController.login);
+loginRouter.get('/index', loginController.index);
 exports.default = loginRouter;

@@ -4,6 +4,6 @@ import { Router } from 'express';
 const registerController = new RegisterController();
 const registerRouter = Router();
 
-registerRouter.post('/register', registerController.store);
+registerRouter.post('/auth/register', registerController.store);
 
 export default registerRouter;

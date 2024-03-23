@@ -7,5 +7,5 @@ const RegisterController_1 = __importDefault(require("../admin/controllers/Regis
 const express_1 = require("express");
 const registerController = new RegisterController_1.default();
 const registerRouter = (0, express_1.Router)();
-registerRouter.post('/register', registerController.store);
+registerRouter.post('/auth/register', registerController.store);
 exports.default = registerRouter;

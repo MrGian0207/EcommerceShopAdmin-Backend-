@@ -9,7 +9,10 @@ const DashboardRouter_1 = __importDefault(require("./DashboardRouter"));
 const RefreshTokenRouter_1 = __importDefault(require("./RefreshTokenRouter"));
 const LogoutRouter_1 = __importDefault(require("./LogoutRouter"));
 function Route(app) {
-    app.use('/auth', RegisterRouter_1.default, LoginRouter_1.default);
-    app.use('/', DashboardRouter_1.default, RefreshTokenRouter_1.default, LogoutRouter_1.default);
+    app.use('/', RegisterRouter_1.default);
+    app.use('/', LoginRouter_1.default);
+    app.use('/', DashboardRouter_1.default);
+    app.use('/', RefreshTokenRouter_1.default);
+    app.use('/', LogoutRouter_1.default);
 }
 exports.default = Route;

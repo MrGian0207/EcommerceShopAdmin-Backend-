@@ -10,12 +10,14 @@ const authenToken = (req, res, next) => {
     const authorizationHeader = req.headers['authorization'];
     const token = authorizationHeader.split(' ')[1];
     if (!token)
-        res.sendStatus(401).json({ status: 'Error Token' });
+        res.status(401).json({ status: 'Error Token' });
     jsonwebtoken_1.default.verify(token, process.env.ACCESS_TOKEN_SECRET_KEY, (err, data) => {
-        console.log(err, data);
-        if (err)
-            res.sendStatus(403).json({ status: 'Error Token' });
-        next();
+        if (err) {
+            res.status(403).json({ status: 'Error' });
+        }
+        else {
+            next();
+        }
     });
 };
 exports.default = authenToken;
