@@ -16,10 +16,10 @@ app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 app.use(cookieParser());
 
 //When be submitted by form
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 
 //for fetch, Https, exios when submitted
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
 
 //methodOverride
 app.use(methodOverride('_method'));
