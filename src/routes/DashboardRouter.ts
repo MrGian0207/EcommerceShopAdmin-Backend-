@@ -1,4 +1,4 @@
-import DashboardController from '../admin/controllers/DashboardController';
+import DashboardController from '../admin/controllers/Dashboard/DashboardController';
 import { Router } from 'express';
 import authenToken from '../middlewares/authenToken';
 

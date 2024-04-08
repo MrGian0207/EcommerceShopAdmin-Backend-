@@ -1,4 +1,4 @@
-import RegisterController from '../admin/controllers/RegisterController';
+import RegisterController from '../admin/controllers/Authorization/RegisterController';
 import { Router } from 'express';
 
 const registerController = new RegisterController();

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import cloudinary from '../../utils/cloudinay';
-import MainCategoriesModel from '../models/MainCategoriesModel';
+import cloudinary from '../../../utils/cloudinary';
+import MainCategoriesModel from '../../models/MainCategoriesModel';
 
 class AddMainCategoriesController {
     async store(req: Request, res: Response) {

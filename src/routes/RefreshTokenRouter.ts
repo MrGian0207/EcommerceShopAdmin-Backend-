@@ -1,4 +1,4 @@
-import RefreshTokenController from '../admin/controllers/RefreshTokenController';
+import RefreshTokenController from '../admin/controllers/Token/RefreshTokenController';
 import { Router } from 'express';
 
 const refreshTokenController = new RefreshTokenController();

@@ -12,8 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const cloudinary_1 = __importDefault(require("../../utils/cloudinary"));
-const MainCategoriesModel_1 = __importDefault(require("../models/MainCategoriesModel"));
+const cloudinary_1 = __importDefault(require("../../../utils/cloudinary"));
+const MainCategoriesModel_1 = __importDefault(require("../../models/MainCategoriesModel"));
 class AddMainCategoriesController {
     store(req, res) {
         return __awaiter(this, void 0, void 0, function* () {

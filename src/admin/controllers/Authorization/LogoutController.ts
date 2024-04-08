@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import UserRefreshToken from '../models/UserRefreshTokenModel';
+import UserRefreshToken from '../../models/UserRefreshTokenModel';
 import dotenv from 'dotenv';
 
 dotenv.config();
