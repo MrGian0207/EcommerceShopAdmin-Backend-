@@ -1,4 +1,4 @@
-import MainCategoriesController from '../admin/controllers/MainCategories/MainCategoriesController';
+import MainCategoriesController from '../admin/controllers/Categories/MainCategoriesController';
 import { Router } from 'express';
 import upload from '../services/multer';
 

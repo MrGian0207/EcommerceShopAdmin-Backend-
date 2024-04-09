@@ -9,6 +9,7 @@ const DashboardRouter_1 = __importDefault(require("./DashboardRouter"));
 const RefreshTokenRouter_1 = __importDefault(require("./RefreshTokenRouter"));
 const LogoutRouter_1 = __importDefault(require("./LogoutRouter"));
 const MainCategoriesRouter_1 = __importDefault(require("./MainCategoriesRouter"));
+const SubCategoriesRouter_1 = __importDefault(require("./SubCategoriesRouter"));
 function Route(app) {
     app.use('/', RegisterRouter_1.default);
     app.use('/', LoginRouter_1.default);
@@ -16,5 +17,6 @@ function Route(app) {
     app.use('/', RefreshTokenRouter_1.default);
     app.use('/', LogoutRouter_1.default);
     app.use('/', MainCategoriesRouter_1.default);
+    app.use('/', SubCategoriesRouter_1.default);
 }
 exports.default = Route;
