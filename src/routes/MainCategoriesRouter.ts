@@ -11,4 +11,20 @@ mainCategoriesRouter.post(
     mainCategoriesController.store,
 );
 
+mainCategoriesRouter.get(
+    '/categories/main-categories',
+    mainCategoriesController.getAll,
+);
+
+mainCategoriesRouter.get(
+    '/categories/main-categories/:id',
+    mainCategoriesController.getOne,
+);
+
+mainCategoriesRouter.post(
+    '/categories/main-categories/:id',
+    upload.single('category-image'),
+    mainCategoriesController.update,
+);
+
 export default mainCategoriesRouter;

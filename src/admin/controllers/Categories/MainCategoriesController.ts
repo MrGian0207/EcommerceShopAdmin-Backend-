@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import cloudinary from '../../../utils/cloudinary';
 import MainCategoriesModel from '../../models/MainCategoriesModel';
+import { UploadApiResponse } from 'cloudinary';
 
 class AddMainCategoriesController {
     async store(req: Request, res: Response) {
@@ -46,6 +47,103 @@ class AddMainCategoriesController {
                 status: 'Success',
                 message: 'Main Categories have been saved successfully !!!',
             });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({
+                status: 'Error',
+                message: 'Internal server error',
+            });
+        }
+    }
+
+    async getAll(req: Request, res: Response) {
+        const mainCategories = await MainCategoriesModel.find();
+        if (mainCategories) {
+            return res.status(200).json({
+                status: 'Success',
+                data: mainCategories,
+            });
+        } else {
+            return res.status(404).json({
+                status: 'Error',
+                message: 'Main Categories not found',
+            });
+        }
+    }
+
+    async getOne(req: Request, res: Response) {
+        const { id } = req.params;
+        const mainCategory = await MainCategoriesModel.findById(id);
+        if (mainCategory) {
+            return res.status(200).json({
+                status: 'Success',
+                data: mainCategory,
+            });
+        } else {
+            return res.status(404).json({
+                status: 'Error',
+                message: 'Main Categories not found',
+            });
+        }
+    }
+
+    async update(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+            const { name, title, slug, description } = req.body;
+            const image = req.file;
+            let imageUrl: UploadApiResponse;
+
+            if (!name || !title || !slug || !description || !image) {
+                return res.status(400).json({
+                    status: 'Error',
+                    message: 'Missing required fields',
+                });
+            }
+
+            const mainCategory = await MainCategoriesModel.findById(id);
+
+            if (image) {
+                const deletedImage: string = mainCategory?.image as string;
+                const publicIdRegex = /\/mainCategories\/([^/.]+)/;
+                const matches = deletedImage.match(publicIdRegex);
+
+                await cloudinary.uploader.destroy(
+                    `mainCategories/${matches && matches[1]}`,
+                    (error, result) => {
+                        if (error) {
+                            console.error('Failed to delete image:', error);
+                            // Xử lý lỗi
+                        } else {
+                            console.log('Image deleted successfully:', result);
+                            // Xử lý khi xóa thành công
+                        }
+                    },
+                );
+
+                imageUrl = await cloudinary.uploader.upload(image.path, {
+                    folder: 'mainCategories',
+                });
+
+                if (mainCategory) {
+                    (mainCategory.name = name.trim()),
+                        (mainCategory.title = title.trim()),
+                        (mainCategory.slug = slug.trim()),
+                        (mainCategory.description = description.trim()),
+                        (mainCategory.image = imageUrl
+                            ? imageUrl.secure_url
+                            : '');
+
+                    mainCategory?.save();
+
+                    // Trả về kết quả thành công
+                    return res.status(200).json({
+                        status: 'Success',
+                        message:
+                            'Main Categories have been updated successfully !!!',
+                    });
+                }
+            }
         } catch (error) {
             console.error(error);
             return res.status(500).json({
