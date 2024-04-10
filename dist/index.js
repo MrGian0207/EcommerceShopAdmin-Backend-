@@ -19,7 +19,7 @@ app.use(express_1.default.urlencoded({ extended: false }));
 //for fetch, Https, exios when submitted
 app.use(express_1.default.json({ limit: '50mb' }));
 //methodOverride
-app.use((0, method_override_1.default)('_method'));
+app.use((0, method_override_1.default)());
 (0, connectionDB_1.default)();
 (0, index_1.default)(app);
 app.listen(8000, () => {

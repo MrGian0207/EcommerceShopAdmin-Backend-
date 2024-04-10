@@ -27,4 +27,9 @@ mainCategoriesRouter.post(
     mainCategoriesController.update,
 );
 
+mainCategoriesRouter.delete(
+    '/categories/main-categories/delete/:id',
+    mainCategoriesController.deleteOne,
+);
+
 export default mainCategoriesRouter;

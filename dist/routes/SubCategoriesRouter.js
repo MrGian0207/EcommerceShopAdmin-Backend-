@@ -9,4 +9,7 @@ const multer_1 = __importDefault(require("../services/multer"));
 const subCategoriesController = new SubCategoriesController_1.default();
 const subCategoriesRouter = (0, express_1.Router)();
 subCategoriesRouter.post('/categories/sub-categories/add', multer_1.default.single('sub-category-image'), subCategoriesController.store);
+subCategoriesRouter.get('/categories/sub-categories', subCategoriesController.getAll);
+subCategoriesRouter.get('/categories/sub-categories/:id', subCategoriesController.getOne);
+subCategoriesRouter.post('/categories/sub-categories/:id', multer_1.default.single('sub-category-image'), subCategoriesController.update);
 exports.default = subCategoriesRouter;

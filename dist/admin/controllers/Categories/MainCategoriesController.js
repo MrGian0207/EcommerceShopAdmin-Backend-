@@ -155,5 +155,54 @@ class AddMainCategoriesController {
             }
         });
     }
+    deleteOne(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { id } = req.body;
+                if (!id) {
+                    return res.status(400).json({
+                        status: 'Error',
+                        message: 'Missing required fields',
+                    });
+                }
+                const mainCategory = yield MainCategoriesModel_1.default.findById(id);
+                if (mainCategory) {
+                    const deletedImage = mainCategory === null || mainCategory === void 0 ? void 0 : mainCategory.image;
+                    const publicIdRegex = /\/mainCategories\/([^/.]+)/;
+                    const matches = deletedImage.match(publicIdRegex);
+                    yield cloudinary_1.default.uploader.destroy(`mainCategories/${matches && matches[1]}`, (error, result) => {
+                        if (error) {
+                            console.error('Failed to delete image:', error);
+                            // Xử lý lỗi
+                        }
+                        else {
+                            console.log('Image deleted successfully:', result);
+                            // Xử lý khi xóa thành công
+                        }
+                    });
+                    yield (mainCategory === null || mainCategory === void 0 ? void 0 : mainCategory.deleteOne());
+                    const confirmDelete = yield MainCategoriesModel_1.default.findById(id);
+                    if (confirmDelete) {
+                        return res.status(404).json({
+                            status: 'Error',
+                            message: 'Main Categories not found',
+                        });
+                    }
+                    else {
+                        return res.status(200).json({
+                            status: 'Success',
+                            message: 'Main Categories have been deleted successfully !!!',
+                        });
+                    }
+                }
+            }
+            catch (error) {
+                return res.status(500).json({
+                    status: 'Error',
+                    message: 'Internal server error',
+                });
+            }
+        });
+    }
 }
 exports.default = AddMainCategoriesController;

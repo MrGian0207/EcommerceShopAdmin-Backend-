@@ -11,4 +11,20 @@ subCategoriesRouter.post(
     subCategoriesController.store,
 );
 
+subCategoriesRouter.get(
+    '/categories/sub-categories',
+    subCategoriesController.getAll,
+);
+
+subCategoriesRouter.get(
+    '/categories/sub-categories/:id',
+    subCategoriesController.getOne,
+);
+
+subCategoriesRouter.post(
+    '/categories/sub-categories/:id',
+    upload.single('sub-category-image'),
+    subCategoriesController.update,
+);
+
 export default subCategoriesRouter;

@@ -12,4 +12,5 @@ mainCategoriesRouter.post('/categories/main-categories/add', multer_1.default.si
 mainCategoriesRouter.get('/categories/main-categories', mainCategoriesController.getAll);
 mainCategoriesRouter.get('/categories/main-categories/:id', mainCategoriesController.getOne);
 mainCategoriesRouter.post('/categories/main-categories/:id', multer_1.default.single('category-image'), mainCategoriesController.update);
+mainCategoriesRouter.delete('/categories/main-categories/delete/:id', mainCategoriesController.deleteOne);
 exports.default = mainCategoriesRouter;

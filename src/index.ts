@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json({ limit: '50mb' }));
 
 //methodOverride
-app.use(methodOverride('_method'));
+app.use(methodOverride());
 
 ConnectMongoDB();
 

@@ -152,6 +152,58 @@ class AddMainCategoriesController {
             });
         }
     }
+
+    async deleteOne(req: Request, res: Response) {
+        try {
+            const { id } = req.body;
+
+            if (!id) {
+                return res.status(400).json({
+                    status: 'Error',
+                    message: 'Missing required fields',
+                });
+            }
+            const mainCategory = await MainCategoriesModel.findById(id);
+            if (mainCategory) {
+                const deletedImage: string = mainCategory?.image as string;
+                const publicIdRegex = /\/mainCategories\/([^/.]+)/;
+                const matches = deletedImage.match(publicIdRegex);
+
+                await cloudinary.uploader.destroy(
+                    `mainCategories/${matches && matches[1]}`,
+                    (error, result) => {
+                        if (error) {
+                            console.error('Failed to delete image:', error);
+                            // Xử lý lỗi
+                        } else {
+                            console.log('Image deleted successfully:', result);
+                            // Xử lý khi xóa thành công
+                        }
+                    },
+                );
+
+                await mainCategory?.deleteOne();
+                const confirmDelete = await MainCategoriesModel.findById(id);
+                if (confirmDelete) {
+                    return res.status(404).json({
+                        status: 'Error',
+                        message: 'Main Categories not found',
+                    });
+                } else {
+                    return res.status(200).json({
+                        status: 'Success',
+                        message:
+                            'Main Categories have been deleted successfully !!!',
+                    });
+                }
+            }
+        } catch (error) {
+            return res.status(500).json({
+                status: 'Error',
+                message: 'Internal server error',
+            });
+        }
+    }
 }
 
 export default AddMainCategoriesController;
