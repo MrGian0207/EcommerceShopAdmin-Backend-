@@ -27,4 +27,9 @@ subCategoriesRouter.post(
     subCategoriesController.update,
 );
 
+subCategoriesRouter.delete(
+    '/categories/sub-categories/delete/:id',
+    subCategoriesController.deleteOne,
+);
+
 export default subCategoriesRouter;

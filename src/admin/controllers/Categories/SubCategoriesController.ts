@@ -168,6 +168,57 @@ class SubCategoriesController {
             });
         }
     }
+    async deleteOne(req: Request, res: Response) {
+        try {
+            const { id } = req.body;
+
+            if (!id) {
+                return res.status(400).json({
+                    status: 'Error',
+                    message: 'Missing required fields',
+                });
+            }
+            const subCategory = await SubCategoriesModel.findById(id);
+            if (subCategory) {
+                const deletedImage: string = subCategory?.image as string;
+                const publicIdRegex = /\/subCategories\/([^/.]+)/;
+                const matches = deletedImage.match(publicIdRegex);
+
+                await cloudinary.uploader.destroy(
+                    `subCategories/${matches && matches[1]}`,
+                    (error, result) => {
+                        if (error) {
+                            console.error('Failed to delete image:', error);
+                            // Xử lý lỗi
+                        } else {
+                            console.log('Image deleted successfully:', result);
+                            // Xử lý khi xóa thành công
+                        }
+                    },
+                );
+
+                await subCategory?.deleteOne();
+                const confirmDelete = await SubCategoriesModel.findById(id);
+                if (confirmDelete) {
+                    return res.status(404).json({
+                        status: 'Error',
+                        message: 'Sub Categories not found',
+                    });
+                } else {
+                    return res.status(200).json({
+                        status: 'Success',
+                        message:
+                            'Sub Categories have been deleted successfully !!!',
+                    });
+                }
+            }
+        } catch (error) {
+            return res.status(500).json({
+                status: 'Error',
+                message: 'Internal server error',
+            });
+        }
+    }
 }
 
 export default SubCategoriesController;
