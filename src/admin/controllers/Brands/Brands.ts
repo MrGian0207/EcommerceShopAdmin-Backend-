@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import cloudinary from '../../../utils/cloudinary';
 import { UploadApiResponse } from 'cloudinary';
-import MainCategoriesModel from '../../models/MainCategoriesModel';
+import BrandsModel from '../../models/BrandsModel';
 
-class AddMainCategoriesController {
+class BrandsController {
     async store(req: Request, res: Response) {
         try {
             const { name, title, slug, description } = req.body;
@@ -19,7 +19,7 @@ class AddMainCategoriesController {
 
             // Tải lên hình ảnh lên Cloudinary
             const imageUrl = await cloudinary.uploader.upload(image.path, {
-                folder: 'mainCategories',
+                folder: 'brands',
             });
 
             // Kiểm tra nếu hình ảnh không tải lên thành công
@@ -30,8 +30,8 @@ class AddMainCategoriesController {
                 });
             }
 
-            // Tạo đối tượng MainCategoriesModel
-            const mainCategories = new MainCategoriesModel({
+            // Tạo đối tượng BrandsModel
+            const brands = new BrandsModel({
                 name: name.trim(),
                 title: title.trim(),
                 slug: slug.trim(),
@@ -40,12 +40,12 @@ class AddMainCategoriesController {
             });
 
             // Lưu đối tượng vào cơ sở dữ liệu
-            await mainCategories.save();
+            await brands.save();
 
             // Trả về kết quả thành công
             return res.status(200).json({
                 status: 'Success',
-                message: 'Main Categories have been saved successfully !!!',
+                message: 'Brands have been saved successfully !!!',
             });
         } catch (error) {
             console.error(error);
@@ -57,32 +57,32 @@ class AddMainCategoriesController {
     }
 
     async getAll(req: Request, res: Response) {
-        const mainCategories = await MainCategoriesModel.find();
-        if (mainCategories) {
+        const brands = await BrandsModel.find();
+        if (brands) {
             return res.status(200).json({
                 status: 'Success',
-                data: mainCategories,
+                data: brands,
             });
         } else {
             return res.status(404).json({
                 status: 'Error',
-                message: 'Main Categories not found',
+                message: 'Brands not found',
             });
         }
     }
 
     async getOne(req: Request, res: Response) {
         const { id } = req.params;
-        const mainCategory = await MainCategoriesModel.findById(id);
-        if (mainCategory) {
+        const brands = await BrandsModel.findById(id);
+        if (brands) {
             return res.status(200).json({
                 status: 'Success',
-                data: mainCategory,
+                data: brands,
             });
         } else {
             return res.status(404).json({
                 status: 'Error',
-                message: 'Main Categories not found',
+                message: 'Brands not found',
             });
         }
     }
@@ -101,15 +101,15 @@ class AddMainCategoriesController {
                 });
             }
 
-            const mainCategory = await MainCategoriesModel.findById(id);
+            const brands = await BrandsModel.findById(id);
 
             if (image) {
-                const deletedImage: string = mainCategory?.image as string;
-                const publicIdRegex = /\/mainCategories\/([^/.]+)/;
+                const deletedImage: string = brands?.image as string;
+                const publicIdRegex = /\/brands\/([^/.]+)/;
                 const matches = deletedImage.match(publicIdRegex);
 
                 await cloudinary.uploader.destroy(
-                    `mainCategories/${matches && matches[1]}`,
+                    `brands/${matches && matches[1]}`,
                     (error, result) => {
                         if (error) {
                             console.error('Failed to delete image:', error);
@@ -122,40 +122,36 @@ class AddMainCategoriesController {
                 );
 
                 imageUrl = await cloudinary.uploader.upload(image.path, {
-                    folder: 'mainCategories',
+                    folder: 'brands',
                 });
 
-                if (mainCategory) {
-                    (mainCategory.name = name.trim()),
-                        (mainCategory.title = title.trim()),
-                        (mainCategory.slug = slug.trim()),
-                        (mainCategory.description = description.trim()),
-                        (mainCategory.image = imageUrl
-                            ? imageUrl.secure_url
-                            : '');
+                if (brands) {
+                    (brands.name = name.trim()),
+                        (brands.title = title.trim()),
+                        (brands.slug = slug.trim()),
+                        (brands.description = description.trim()),
+                        (brands.image = imageUrl ? imageUrl.secure_url : '');
 
-                    mainCategory?.save();
+                    brands?.save();
 
                     // Trả về kết quả thành công
                     return res.status(200).json({
                         status: 'Success',
-                        message:
-                            'Main Categories have been updated successfully !!!',
+                        message: 'Brands have been updated successfully !!!',
                     });
                 }
             } else {
-                if (mainCategory) {
-                    (mainCategory.name = name.trim()),
-                        (mainCategory.title = title.trim()),
-                        (mainCategory.slug = slug.trim()),
-                        (mainCategory.description = description.trim()),
-                        mainCategory?.save();
+                if (brands) {
+                    (brands.name = name.trim()),
+                        (brands.title = title.trim()),
+                        (brands.slug = slug.trim()),
+                        (brands.description = description.trim()),
+                        brands?.save();
 
                     // Trả về kết quả thành công
                     return res.status(200).json({
                         status: 'Success',
-                        message:
-                            'Main Categories have been updated successfully !!!',
+                        message: 'Brands have been updated successfully !!!',
                     });
                 }
             }
@@ -178,14 +174,14 @@ class AddMainCategoriesController {
                     message: 'Missing required fields',
                 });
             }
-            const mainCategory = await MainCategoriesModel.findById(id);
-            if (mainCategory) {
-                const deletedImage: string = mainCategory?.image as string;
-                const publicIdRegex = /\/mainCategories\/([^/.]+)/;
+            const brands = await BrandsModel.findById(id);
+            if (brands) {
+                const deletedImage: string = brands?.image as string;
+                const publicIdRegex = /\/brands\/([^/.]+)/;
                 const matches = deletedImage.match(publicIdRegex);
 
                 await cloudinary.uploader.destroy(
-                    `mainCategories/${matches && matches[1]}`,
+                    `brands/${matches && matches[1]}`,
                     (error, result) => {
                         if (error) {
                             console.error('Failed to delete image:', error);
@@ -197,18 +193,17 @@ class AddMainCategoriesController {
                     },
                 );
 
-                await mainCategory?.deleteOne();
-                const confirmDelete = await MainCategoriesModel.findById(id);
+                await brands?.deleteOne();
+                const confirmDelete = await BrandsModel.findById(id);
                 if (confirmDelete) {
                     return res.status(404).json({
                         status: 'Error',
-                        message: 'Main Categories not found',
+                        message: 'Brands not found',
                     });
                 } else {
                     return res.status(200).json({
                         status: 'Success',
-                        message:
-                            'Main Categories have been deleted successfully !!!',
+                        message: 'Brands have been deleted successfully !!!',
                     });
                 }
             }
@@ -219,21 +214,5 @@ class AddMainCategoriesController {
             });
         }
     }
-
-    async getParentCategories(req: Request, res: Response) {
-        const nameMainCategories = await MainCategoriesModel.distinct('name');
-        if (nameMainCategories) {
-            return res.status(200).json({
-                status: 'Success',
-                data: nameMainCategories,
-            });
-        } else {
-            return res.status(404).json({
-                status: 'Error',
-                message: 'Main Categories not found',
-            });
-        }
-    }
 }
-
-export default AddMainCategoriesController;
+export default BrandsController;

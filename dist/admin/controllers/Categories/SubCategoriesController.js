@@ -111,12 +111,7 @@ class SubCategoriesController {
                 const { name, title, slug, description, parentCategory } = req.body;
                 const image = req.file;
                 let imageUrl;
-                if (!name ||
-                    !title ||
-                    !slug ||
-                    !description ||
-                    !parentCategory ||
-                    !image) {
+                if (!name || !title || !slug || !description || !parentCategory) {
                     return res.status(400).json({
                         status: 'Error',
                         message: 'Missing required fields',
@@ -150,6 +145,21 @@ class SubCategoriesController {
                                 ? imageUrl.secure_url
                                 : '');
                         subCategory === null || subCategory === void 0 ? void 0 : subCategory.save();
+                        // Trả về kết quả thành công
+                        return res.status(200).json({
+                            status: 'Success',
+                            message: 'Sub Categories have been updated successfully !!!',
+                        });
+                    }
+                }
+                else {
+                    if (subCategory) {
+                        (subCategory.name = name.trim()),
+                            (subCategory.title = title.trim()),
+                            (subCategory.slug = slug.trim()),
+                            (subCategory.description = description.trim()),
+                            (subCategory.parentCategory = parentCategory.trim()),
+                            subCategory === null || subCategory === void 0 ? void 0 : subCategory.save();
                         // Trả về kết quả thành công
                         return res.status(200).json({
                             status: 'Success',

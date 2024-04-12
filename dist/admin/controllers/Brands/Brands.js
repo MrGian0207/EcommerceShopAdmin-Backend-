@@ -13,8 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const cloudinary_1 = __importDefault(require("../../../utils/cloudinary"));
-const MainCategoriesModel_1 = __importDefault(require("../../models/MainCategoriesModel"));
-class AddMainCategoriesController {
+const BrandsModel_1 = __importDefault(require("../../models/BrandsModel"));
+class BrandsController {
     store(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -29,7 +29,7 @@ class AddMainCategoriesController {
                 }
                 // Tải lên hình ảnh lên Cloudinary
                 const imageUrl = yield cloudinary_1.default.uploader.upload(image.path, {
-                    folder: 'mainCategories',
+                    folder: 'brands',
                 });
                 // Kiểm tra nếu hình ảnh không tải lên thành công
                 if (!imageUrl || !imageUrl.secure_url) {
@@ -38,8 +38,8 @@ class AddMainCategoriesController {
                         message: 'Failed to upload image',
                     });
                 }
-                // Tạo đối tượng MainCategoriesModel
-                const mainCategories = new MainCategoriesModel_1.default({
+                // Tạo đối tượng BrandsModel
+                const brands = new BrandsModel_1.default({
                     name: name.trim(),
                     title: title.trim(),
                     slug: slug.trim(),
@@ -47,11 +47,11 @@ class AddMainCategoriesController {
                     image: imageUrl.secure_url,
                 });
                 // Lưu đối tượng vào cơ sở dữ liệu
-                yield mainCategories.save();
+                yield brands.save();
                 // Trả về kết quả thành công
                 return res.status(200).json({
                     status: 'Success',
-                    message: 'Main Categories have been saved successfully !!!',
+                    message: 'Brands have been saved successfully !!!',
                 });
             }
             catch (error) {
@@ -65,17 +65,17 @@ class AddMainCategoriesController {
     }
     getAll(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const mainCategories = yield MainCategoriesModel_1.default.find();
-            if (mainCategories) {
+            const brands = yield BrandsModel_1.default.find();
+            if (brands) {
                 return res.status(200).json({
                     status: 'Success',
-                    data: mainCategories,
+                    data: brands,
                 });
             }
             else {
                 return res.status(404).json({
                     status: 'Error',
-                    message: 'Main Categories not found',
+                    message: 'Brands not found',
                 });
             }
         });
@@ -83,17 +83,17 @@ class AddMainCategoriesController {
     getOne(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const mainCategory = yield MainCategoriesModel_1.default.findById(id);
-            if (mainCategory) {
+            const brands = yield BrandsModel_1.default.findById(id);
+            if (brands) {
                 return res.status(200).json({
                     status: 'Success',
-                    data: mainCategory,
+                    data: brands,
                 });
             }
             else {
                 return res.status(404).json({
                     status: 'Error',
-                    message: 'Main Categories not found',
+                    message: 'Brands not found',
                 });
             }
         });
@@ -111,12 +111,12 @@ class AddMainCategoriesController {
                         message: 'Missing required fields',
                     });
                 }
-                const mainCategory = yield MainCategoriesModel_1.default.findById(id);
+                const brands = yield BrandsModel_1.default.findById(id);
                 if (image) {
-                    const deletedImage = mainCategory === null || mainCategory === void 0 ? void 0 : mainCategory.image;
-                    const publicIdRegex = /\/mainCategories\/([^/.]+)/;
+                    const deletedImage = brands === null || brands === void 0 ? void 0 : brands.image;
+                    const publicIdRegex = /\/brands\/([^/.]+)/;
                     const matches = deletedImage.match(publicIdRegex);
-                    yield cloudinary_1.default.uploader.destroy(`mainCategories/${matches && matches[1]}`, (error, result) => {
+                    yield cloudinary_1.default.uploader.destroy(`brands/${matches && matches[1]}`, (error, result) => {
                         if (error) {
                             console.error('Failed to delete image:', error);
                             // Xử lý lỗi
@@ -127,35 +127,33 @@ class AddMainCategoriesController {
                         }
                     });
                     imageUrl = yield cloudinary_1.default.uploader.upload(image.path, {
-                        folder: 'mainCategories',
+                        folder: 'brands',
                     });
-                    if (mainCategory) {
-                        (mainCategory.name = name.trim()),
-                            (mainCategory.title = title.trim()),
-                            (mainCategory.slug = slug.trim()),
-                            (mainCategory.description = description.trim()),
-                            (mainCategory.image = imageUrl
-                                ? imageUrl.secure_url
-                                : '');
-                        mainCategory === null || mainCategory === void 0 ? void 0 : mainCategory.save();
+                    if (brands) {
+                        (brands.name = name.trim()),
+                            (brands.title = title.trim()),
+                            (brands.slug = slug.trim()),
+                            (brands.description = description.trim()),
+                            (brands.image = imageUrl ? imageUrl.secure_url : '');
+                        brands === null || brands === void 0 ? void 0 : brands.save();
                         // Trả về kết quả thành công
                         return res.status(200).json({
                             status: 'Success',
-                            message: 'Main Categories have been updated successfully !!!',
+                            message: 'Brands have been updated successfully !!!',
                         });
                     }
                 }
                 else {
-                    if (mainCategory) {
-                        (mainCategory.name = name.trim()),
-                            (mainCategory.title = title.trim()),
-                            (mainCategory.slug = slug.trim()),
-                            (mainCategory.description = description.trim()),
-                            mainCategory === null || mainCategory === void 0 ? void 0 : mainCategory.save();
+                    if (brands) {
+                        (brands.name = name.trim()),
+                            (brands.title = title.trim()),
+                            (brands.slug = slug.trim()),
+                            (brands.description = description.trim()),
+                            brands === null || brands === void 0 ? void 0 : brands.save();
                         // Trả về kết quả thành công
                         return res.status(200).json({
                             status: 'Success',
-                            message: 'Main Categories have been updated successfully !!!',
+                            message: 'Brands have been updated successfully !!!',
                         });
                     }
                 }
@@ -179,12 +177,12 @@ class AddMainCategoriesController {
                         message: 'Missing required fields',
                     });
                 }
-                const mainCategory = yield MainCategoriesModel_1.default.findById(id);
-                if (mainCategory) {
-                    const deletedImage = mainCategory === null || mainCategory === void 0 ? void 0 : mainCategory.image;
-                    const publicIdRegex = /\/mainCategories\/([^/.]+)/;
+                const brands = yield BrandsModel_1.default.findById(id);
+                if (brands) {
+                    const deletedImage = brands === null || brands === void 0 ? void 0 : brands.image;
+                    const publicIdRegex = /\/brands\/([^/.]+)/;
                     const matches = deletedImage.match(publicIdRegex);
-                    yield cloudinary_1.default.uploader.destroy(`mainCategories/${matches && matches[1]}`, (error, result) => {
+                    yield cloudinary_1.default.uploader.destroy(`brands/${matches && matches[1]}`, (error, result) => {
                         if (error) {
                             console.error('Failed to delete image:', error);
                             // Xử lý lỗi
@@ -194,18 +192,18 @@ class AddMainCategoriesController {
                             // Xử lý khi xóa thành công
                         }
                     });
-                    yield (mainCategory === null || mainCategory === void 0 ? void 0 : mainCategory.deleteOne());
-                    const confirmDelete = yield MainCategoriesModel_1.default.findById(id);
+                    yield (brands === null || brands === void 0 ? void 0 : brands.deleteOne());
+                    const confirmDelete = yield BrandsModel_1.default.findById(id);
                     if (confirmDelete) {
                         return res.status(404).json({
                             status: 'Error',
-                            message: 'Main Categories not found',
+                            message: 'Brands not found',
                         });
                     }
                     else {
                         return res.status(200).json({
                             status: 'Success',
-                            message: 'Main Categories have been deleted successfully !!!',
+                            message: 'Brands have been deleted successfully !!!',
                         });
                     }
                 }
@@ -218,22 +216,5 @@ class AddMainCategoriesController {
             }
         });
     }
-    getParentCategories(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const nameMainCategories = yield MainCategoriesModel_1.default.distinct('name');
-            if (nameMainCategories) {
-                return res.status(200).json({
-                    status: 'Success',
-                    data: nameMainCategories,
-                });
-            }
-            else {
-                return res.status(404).json({
-                    status: 'Error',
-                    message: 'Main Categories not found',
-                });
-            }
-        });
-    }
 }
-exports.default = AddMainCategoriesController;
+exports.default = BrandsController;

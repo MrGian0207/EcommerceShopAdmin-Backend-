@@ -102,14 +102,7 @@ class SubCategoriesController {
             const image = req.file;
             let imageUrl: UploadApiResponse;
 
-            if (
-                !name ||
-                !title ||
-                !slug ||
-                !description ||
-                !parentCategory ||
-                !image
-            ) {
+            if (!name || !title || !slug || !description || !parentCategory) {
                 return res.status(400).json({
                     status: 'Error',
                     message: 'Missing required fields',
@@ -151,6 +144,22 @@ class SubCategoriesController {
                             : '');
 
                     subCategory?.save();
+
+                    // Trả về kết quả thành công
+                    return res.status(200).json({
+                        status: 'Success',
+                        message:
+                            'Sub Categories have been updated successfully !!!',
+                    });
+                }
+            } else {
+                if (subCategory) {
+                    (subCategory.name = name.trim()),
+                        (subCategory.title = title.trim()),
+                        (subCategory.slug = slug.trim()),
+                        (subCategory.description = description.trim()),
+                        (subCategory.parentCategory = parentCategory.trim()),
+                        subCategory?.save();
 
                     // Trả về kết quả thành công
                     return res.status(200).json({
