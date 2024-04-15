@@ -18,14 +18,14 @@ class SubCategoriesController {
     store(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { name, title, slug, description, parentCategory } = req.body;
+                const { name, title, slug, description, category } = req.body;
                 const image = req.file;
                 // Kiểm tra các trường bắt buộc
                 if (!name ||
                     !title ||
                     !slug ||
                     !description ||
-                    !parentCategory ||
+                    !category ||
                     !image) {
                     return res.status(400).json({
                         status: 'Error',
@@ -49,7 +49,7 @@ class SubCategoriesController {
                     title: title.trim(),
                     slug: slug.trim(),
                     description: description.trim(),
-                    parentCategory: parentCategory.trim(),
+                    parentCategory: category.trim(),
                     image: imageUrl.secure_url,
                 });
                 // Lưu đối tượng vào cơ sở dữ liệu
@@ -108,10 +108,10 @@ class SubCategoriesController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { id } = req.params;
-                const { name, title, slug, description, parentCategory } = req.body;
+                const { name, title, slug, description, category } = req.body;
                 const image = req.file;
                 let imageUrl;
-                if (!name || !title || !slug || !description || !parentCategory) {
+                if (!name || !title || !slug || !description || !category) {
                     return res.status(400).json({
                         status: 'Error',
                         message: 'Missing required fields',
@@ -140,7 +140,7 @@ class SubCategoriesController {
                             (subCategory.title = title.trim()),
                             (subCategory.slug = slug.trim()),
                             (subCategory.description = description.trim()),
-                            (subCategory.parentCategory = parentCategory.trim()),
+                            (subCategory.parentCategory = category.trim()),
                             (subCategory.image = imageUrl
                                 ? imageUrl.secure_url
                                 : '');
@@ -158,7 +158,7 @@ class SubCategoriesController {
                             (subCategory.title = title.trim()),
                             (subCategory.slug = slug.trim()),
                             (subCategory.description = description.trim()),
-                            (subCategory.parentCategory = parentCategory.trim()),
+                            (subCategory.parentCategory = category.trim()),
                             subCategory === null || subCategory === void 0 ? void 0 : subCategory.save();
                         // Trả về kết quả thành công
                         return res.status(200).json({
@@ -222,6 +222,23 @@ class SubCategoriesController {
                 return res.status(500).json({
                     status: 'Error',
                     message: 'Internal server error',
+                });
+            }
+        });
+    }
+    subCategories(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const nameSubCategories = yield SubCategoriesModel_1.default.distinct('name');
+            if (nameSubCategories) {
+                return res.status(200).json({
+                    status: 'Success',
+                    data: nameSubCategories,
+                });
+            }
+            else {
+                return res.status(404).json({
+                    status: 'Error',
+                    message: 'Sub Categories not found',
                 });
             }
         });

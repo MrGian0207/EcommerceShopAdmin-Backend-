@@ -218,7 +218,7 @@ class AddMainCategoriesController {
             }
         });
     }
-    getParentCategories(req, res) {
+    categories(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const nameMainCategories = yield MainCategoriesModel_1.default.distinct('name');
             if (nameMainCategories) {

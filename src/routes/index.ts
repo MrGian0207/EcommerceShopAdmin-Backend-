@@ -6,6 +6,7 @@ import logoutRouter from './LogoutRouter';
 import mainCategoriesRouter from './MainCategoriesRouter';
 import subCategoriesRouter from './SubCategoriesRouter';
 import brandsRouter from './BrandsRouter';
+import productRouter from './ProductRouter';
 
 import { Express } from 'express';
 
@@ -25,5 +26,7 @@ function Route(app: Express) {
     app.use('/', subCategoriesRouter);
 
     app.use('/', brandsRouter);
+
+    app.use('/', productRouter);
 }
 export default Route;

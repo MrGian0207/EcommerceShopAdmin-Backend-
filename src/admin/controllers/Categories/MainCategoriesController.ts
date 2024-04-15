@@ -220,7 +220,7 @@ class AddMainCategoriesController {
         }
     }
 
-    async getParentCategories(req: Request, res: Response) {
+    async categories(req: Request, res: Response) {
         const nameMainCategories = await MainCategoriesModel.distinct('name');
         if (nameMainCategories) {
             return res.status(200).json({

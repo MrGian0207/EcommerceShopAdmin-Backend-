@@ -6,7 +6,7 @@ import { UploadApiResponse } from 'cloudinary';
 class SubCategoriesController {
     async store(req: Request, res: Response) {
         try {
-            const { name, title, slug, description, parentCategory } = req.body;
+            const { name, title, slug, description, category } = req.body;
             const image = req.file;
 
             // Kiểm tra các trường bắt buộc
@@ -15,7 +15,7 @@ class SubCategoriesController {
                 !title ||
                 !slug ||
                 !description ||
-                !parentCategory ||
+                !category ||
                 !image
             ) {
                 return res.status(400).json({
@@ -43,7 +43,7 @@ class SubCategoriesController {
                 title: title.trim(),
                 slug: slug.trim(),
                 description: description.trim(),
-                parentCategory: parentCategory.trim(),
+                parentCategory: category.trim(),
                 image: imageUrl.secure_url,
             });
 
@@ -98,11 +98,11 @@ class SubCategoriesController {
     async update(req: Request, res: Response) {
         try {
             const { id } = req.params;
-            const { name, title, slug, description, parentCategory } = req.body;
+            const { name, title, slug, description, category } = req.body;
             const image = req.file;
             let imageUrl: UploadApiResponse;
 
-            if (!name || !title || !slug || !description || !parentCategory) {
+            if (!name || !title || !slug || !description || !category) {
                 return res.status(400).json({
                     status: 'Error',
                     message: 'Missing required fields',
@@ -138,7 +138,7 @@ class SubCategoriesController {
                         (subCategory.title = title.trim()),
                         (subCategory.slug = slug.trim()),
                         (subCategory.description = description.trim()),
-                        (subCategory.parentCategory = parentCategory.trim()),
+                        (subCategory.parentCategory = category.trim()),
                         (subCategory.image = imageUrl
                             ? imageUrl.secure_url
                             : '');
@@ -158,7 +158,7 @@ class SubCategoriesController {
                         (subCategory.title = title.trim()),
                         (subCategory.slug = slug.trim()),
                         (subCategory.description = description.trim()),
-                        (subCategory.parentCategory = parentCategory.trim()),
+                        (subCategory.parentCategory = category.trim()),
                         subCategory?.save();
 
                     // Trả về kết quả thành công
@@ -225,6 +225,21 @@ class SubCategoriesController {
             return res.status(500).json({
                 status: 'Error',
                 message: 'Internal server error',
+            });
+        }
+    }
+
+    async subCategories(req: Request, res: Response) {
+        const nameSubCategories = await SubCategoriesModel.distinct('name');
+        if (nameSubCategories) {
+            return res.status(200).json({
+                status: 'Success',
+                data: nameSubCategories,
+            });
+        } else {
+            return res.status(404).json({
+                status: 'Error',
+                message: 'Sub Categories not found',
             });
         }
     }

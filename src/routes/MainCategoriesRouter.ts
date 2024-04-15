@@ -17,8 +17,8 @@ mainCategoriesRouter.get(
 );
 
 mainCategoriesRouter.get(
-    '/categories/main-categories/parent-categories',
-    mainCategoriesController.getParentCategories,
+    '/categories/main-categories/name',
+    mainCategoriesController.categories,
 );
 
 mainCategoriesRouter.get(

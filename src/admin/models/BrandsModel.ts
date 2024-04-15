@@ -1,4 +1,3 @@
-import { timeStamp } from 'console';
 import mongoose, { Schema } from 'mongoose';
 
 interface Brands {

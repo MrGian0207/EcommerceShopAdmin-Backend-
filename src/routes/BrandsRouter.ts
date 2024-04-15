@@ -1,9 +1,10 @@
-import BrandsController from '../admin/controllers/Brands/Brands';
+import BrandsController from '../admin/controllers/Brands/BrandsController';
 import { Router } from 'express';
 import upload from '../services/multer';
 
 const brandsController = new BrandsController();
 const brandsRouter = Router();
+
 brandsRouter.post(
     '/brands/add',
     upload.single('brands-image'),
@@ -11,6 +12,8 @@ brandsRouter.post(
 );
 
 brandsRouter.get('/brands', brandsController.getAll);
+
+brandsRouter.get('/brands/name', brandsController.brands);
 
 brandsRouter.get('/brands/:id', brandsController.getOne);
 

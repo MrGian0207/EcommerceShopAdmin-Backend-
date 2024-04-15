@@ -17,6 +17,11 @@ subCategoriesRouter.get(
 );
 
 subCategoriesRouter.get(
+    '/categories/sub-categories/name',
+    subCategoriesController.subCategories,
+);
+
+subCategoriesRouter.get(
     '/categories/sub-categories/:id',
     subCategoriesController.getOne,
 );

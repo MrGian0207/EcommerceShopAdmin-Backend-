@@ -11,6 +11,7 @@ const LogoutRouter_1 = __importDefault(require("./LogoutRouter"));
 const MainCategoriesRouter_1 = __importDefault(require("./MainCategoriesRouter"));
 const SubCategoriesRouter_1 = __importDefault(require("./SubCategoriesRouter"));
 const BrandsRouter_1 = __importDefault(require("./BrandsRouter"));
+const ProductRouter_1 = __importDefault(require("./ProductRouter"));
 function Route(app) {
     app.use('/', RegisterRouter_1.default);
     app.use('/', LoginRouter_1.default);
@@ -20,5 +21,6 @@ function Route(app) {
     app.use('/', MainCategoriesRouter_1.default);
     app.use('/', SubCategoriesRouter_1.default);
     app.use('/', BrandsRouter_1.default);
+    app.use('/', ProductRouter_1.default);
 }
 exports.default = Route;

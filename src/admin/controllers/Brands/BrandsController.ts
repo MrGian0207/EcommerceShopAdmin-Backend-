@@ -214,5 +214,20 @@ class BrandsController {
             });
         }
     }
+
+    async brands(req: Request, res: Response) {
+        const nameBrands = await BrandsModel.distinct('name');
+        if (nameBrands) {
+            return res.status(200).json({
+                status: 'Success',
+                data: nameBrands,
+            });
+        } else {
+            return res.status(404).json({
+                status: 'Error',
+                message: 'Brands not found',
+            });
+        }
+    }
 }
 export default BrandsController;
