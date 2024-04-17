@@ -143,5 +143,77 @@ class ProductController {
             }
         });
     }
+    getAll(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const products = yield ProductModel_1.ProductModel.find();
+                let variants = [];
+                let quantity = [];
+                yield Promise.all(products.map((product, index) => __awaiter(this, void 0, void 0, function* () {
+                    const variantDefault = (yield ProductModel_1.VariantModel.findOne({
+                        variantName: product.defaultVariant,
+                    }));
+                    if (variants) {
+                        variants[index] = variantDefault;
+                    }
+                    const variantArray = yield ProductModel_1.VariantModel.find({
+                        product: product._id,
+                    });
+                    if (quantity && variantArray.length > 0) {
+                        const totalQuantity = variantArray.reduce((acc, variant) => acc + parseInt(variant.variantQuantity || '0'), 0);
+                        quantity[index] = totalQuantity;
+                    }
+                })));
+                if (products.length > 0) {
+                    return res.status(200).json({
+                        status: 'Success',
+                        data: products,
+                        variants: variants,
+                        quantity: quantity,
+                    });
+                }
+                else {
+                    return res.status(404).json({
+                        status: 'Error',
+                        message: 'Products not found',
+                    });
+                }
+            }
+            catch (error) {
+                return res.status(500).json({
+                    status: 'Error',
+                    message: 'Error fetching products',
+                });
+            }
+        });
+    }
+    activeProducts(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const update = req.body;
+                const product = yield ProductModel_1.ProductModel.findByIdAndUpdate(update._id, {
+                    featureProduct: update.feature,
+                });
+                if (product) {
+                    return res.status(200).json({
+                        status: 'Success',
+                        message: `${product === null || product === void 0 ? void 0 : product.name} active successfully`,
+                    });
+                }
+                else {
+                    return res.status(404).json({
+                        status: 'Error',
+                        message: 'Product not found',
+                    });
+                }
+            }
+            catch (error) {
+                return res.status(500).json({
+                    status: 'Error',
+                    message: 'Error activating product',
+                });
+            }
+        });
+    }
 }
 exports.default = ProductController;

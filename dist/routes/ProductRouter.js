@@ -9,4 +9,6 @@ const multer_1 = __importDefault(require("../services/multer"));
 const productController = new ProductController_1.default();
 const productRouter = (0, express_1.Router)();
 productRouter.post('/products/add', multer_1.default.array('product-variant-image', 20), productController.store);
+productRouter.get('/products', productController.getAll);
+productRouter.put('/products', productController.activeProducts);
 exports.default = productRouter;
