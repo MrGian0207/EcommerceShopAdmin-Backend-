@@ -18,7 +18,7 @@ class ProductController {
     store(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { name, title, slug, description, category, subCategory, brand, gender, status, productCode, tag, featureProduct, defaultVariant, variantName, variantSize, variantColor, variantProductSKU, variantQuantity, variantRegularPrice, variantSalePrice, variantNumberImagesOfVariant, } = req.body;
+                const { name, title, slug, description, category, subCategory, brand, gender, status, productCode, tag, featureProduct, defaultVariant, variantName, variantSize, variantColor, variantProductSKU, variantQuantity, variantRegularPrice, variantSalePrice, variantNumberImagesOfVariants, } = req.body;
                 const variantImages = req.files;
                 if (!name ||
                     !title ||
@@ -40,40 +40,13 @@ class ProductController {
                     !variantQuantity ||
                     !variantRegularPrice ||
                     !variantSalePrice ||
-                    !variantNumberImagesOfVariant) {
+                    !variantNumberImagesOfVariants) {
                     return res.status(400).json({
                         status: 'Error',
                         message: 'Missing required fields',
                     });
                 }
-                const variantNameArray = variantName
-                    .trim()
-                    .slice(0, -1)
-                    .split('-')
-                    .map((name) => name.replace(/"/g, ' ').trim());
-                const variantSizeArray = variantSize
-                    .trim()
-                    .slice(0, -1)
-                    .split('-')
-                    .map((size) => size.replace(/"/g, ' ').trim());
-                const variantColorArray = variantColor
-                    .trim()
-                    .slice(0, -1)
-                    .split('-')
-                    .map((color) => color.replace(/"/g, ' ').trim());
-                const variantProductSKUArray = variantProductSKU
-                    .trim()
-                    .split(' ');
-                const variantQuantityArray = variantQuantity
-                    .trim()
-                    .split(' ');
-                const variantRegularPriceArray = variantRegularPrice
-                    .trim()
-                    .split(' ');
-                const variantSalePriceArray = variantSalePrice
-                    .trim()
-                    .split(' ');
-                const variantNumberImagesOfVariantArray = variantNumberImagesOfVariant
+                const variantNumberImagesOfVariantArray = variantNumberImagesOfVariants
                     .trim()
                     .split(' ')
                     .map((numberImages) => Number.parseInt(numberImages));
@@ -93,7 +66,7 @@ class ProductController {
                     defaultVariant,
                 });
                 variantName &&
-                    variantNameArray.forEach((variantName, index) => __awaiter(this, void 0, void 0, function* () {
+                    variantName.forEach((name, index) => __awaiter(this, void 0, void 0, function* () {
                         var _a;
                         try {
                             let imagesFileVariant = [];
@@ -107,13 +80,13 @@ class ProductController {
                                 }
                             }
                             const variant = new ProductModel_1.VariantModel({
-                                variantName: variantName,
-                                variantSize: variantSizeArray[index],
-                                variantColor: variantColorArray[index],
-                                variantProductSKU: variantProductSKUArray[index],
-                                variantQuantity: variantQuantityArray[index],
-                                variantRegularPrice: variantRegularPriceArray[index],
-                                variantSalePrice: variantSalePriceArray[index],
+                                variantName: name,
+                                variantSize: variantSize[index],
+                                variantColor: variantColor[index],
+                                variantProductSKU: variantProductSKU[index],
+                                variantQuantity: variantQuantity[index],
+                                variantRegularPrice: variantRegularPrice[index],
+                                variantSalePrice: variantSalePrice[index],
                                 variantImagesFile: imagesFileVariant,
                                 product: product._id,
                             });
@@ -211,6 +184,175 @@ class ProductController {
                 return res.status(500).json({
                     status: 'Error',
                     message: 'Error activating product',
+                });
+            }
+        });
+    }
+    getOne(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { id } = req.params;
+                const product = yield ProductModel_1.ProductModel.findById(id).populate('variants');
+                if (product) {
+                    return res.status(200).json({
+                        status: 'Success',
+                        data: product,
+                    });
+                }
+            }
+            catch (error) {
+                return res.status(500).json({
+                    status: 'Error',
+                    message: 'Error fetching product',
+                });
+            }
+        });
+    }
+    update(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { id } = req.params;
+                const { name, title, slug, description, category, subCategory, brand, gender, status, productCode, tag, featureProduct, defaultVariant, variantName, variantSize, variantColor, variantProductSKU, variantQuantity, variantRegularPrice, variantSalePrice, variantNumberImagesOfVariants, } = req.body;
+                const variantImages = req.files;
+                console.log(variantImages);
+                if (!name ||
+                    !title ||
+                    !slug ||
+                    !description ||
+                    !category ||
+                    !subCategory ||
+                    !brand ||
+                    !gender ||
+                    !status ||
+                    !productCode ||
+                    !tag ||
+                    !featureProduct ||
+                    !defaultVariant ||
+                    !variantName ||
+                    !variantSize ||
+                    !variantColor ||
+                    !variantProductSKU ||
+                    !variantQuantity ||
+                    !variantRegularPrice ||
+                    !variantSalePrice ||
+                    !variantNumberImagesOfVariants) {
+                    return res.status(400).json({
+                        status: 'Error',
+                        message: 'Missing required fields',
+                    });
+                }
+                const product = yield ProductModel_1.ProductModel.findByIdAndUpdate(id, {
+                    name,
+                    title,
+                    slug,
+                    description,
+                    category,
+                    subCategory,
+                    brand,
+                    gender,
+                    status,
+                    productCode,
+                    tag,
+                    featureProduct,
+                    defaultVariant,
+                });
+                if (product) {
+                    const variantNumberImagesOfVariantArray = variantNumberImagesOfVariants
+                        .trim()
+                        .split(' ')
+                        .map((numberImages) => Number.parseInt(numberImages));
+                    variantName &&
+                        variantName.forEach((name, index) => __awaiter(this, void 0, void 0, function* () {
+                            var _a;
+                            try {
+                                if ((variantImages === null || variantImages === void 0 ? void 0 : variantImages.length) &&
+                                    (variantImages === null || variantImages === void 0 ? void 0 : variantImages.length) > 0) {
+                                    let imagesFileVariant = [];
+                                    for (let i = 0; i <
+                                        variantNumberImagesOfVariantArray[index]; i++) {
+                                        if (variantImages &&
+                                            Array.isArray(variantImages)) {
+                                            const imageUrl = yield cloudinary_1.default.uploader.upload((_a = variantImages[0]) === null || _a === void 0 ? void 0 : _a.path, {
+                                                folder: 'variant',
+                                            });
+                                            imagesFileVariant.push(imageUrl.secure_url);
+                                            variantImages === null || variantImages === void 0 ? void 0 : variantImages.splice(0, 1);
+                                        }
+                                    }
+                                    const variantIsExisted = yield ProductModel_1.VariantModel.findOne({
+                                        variantName: name,
+                                    });
+                                    if (!variantIsExisted) {
+                                        const variant = new ProductModel_1.VariantModel({
+                                            variantName: name,
+                                            variantSize: variantSize[index],
+                                            variantColor: variantColor[index],
+                                            variantProductSKU: variantProductSKU[index],
+                                            variantQuantity: variantQuantity[index],
+                                            variantRegularPrice: variantRegularPrice[index],
+                                            variantSalePrice: variantSalePrice[index],
+                                            variantImagesFile: imagesFileVariant,
+                                            product: product._id,
+                                        });
+                                        yield variant.save();
+                                        yield product.updateOne({
+                                            $push: { variants: variant._id },
+                                        });
+                                    }
+                                    else {
+                                        const variant = yield ProductModel_1.VariantModel.findOneAndUpdate({ variantName: name }, {
+                                            variantName: name,
+                                            variantSize: variantSize[index],
+                                            variantColor: variantColor[index],
+                                            variantProductSKU: variantProductSKU[index],
+                                            variantQuantity: variantQuantity[index],
+                                            variantRegularPrice: variantRegularPrice[index],
+                                            variantSalePrice: variantSalePrice[index],
+                                            variantImagesFile: imagesFileVariant,
+                                        });
+                                        if (!variant) {
+                                            return res.status(500).json({
+                                                status: 'Error',
+                                                message: 'Error processing variant',
+                                            });
+                                        }
+                                    }
+                                }
+                                else {
+                                    const variant = yield ProductModel_1.VariantModel.findOneAndUpdate({ variantName: name }, {
+                                        variantName: name,
+                                        variantSize: variantSize[index],
+                                        variantColor: variantColor[index],
+                                        variantProductSKU: variantProductSKU[index],
+                                        variantQuantity: variantQuantity[index],
+                                        variantRegularPrice: variantRegularPrice[index],
+                                        variantSalePrice: variantSalePrice[index],
+                                    });
+                                    if (!variant) {
+                                        return res.status(500).json({
+                                            status: 'Error',
+                                            message: 'Error processing variant',
+                                        });
+                                    }
+                                }
+                            }
+                            catch (error) {
+                                return res.status(500).json({
+                                    status: 'Error',
+                                    message: 'Error processing variant',
+                                });
+                            }
+                        }));
+                }
+                return res.status(200).json({
+                    status: 'Success',
+                    message: 'Product updated successfully',
+                });
+            }
+            catch (error) {
+                return res.status(500).json({
+                    status: 'Error',
+                    message: 'Error processing variant',
                 });
             }
         });

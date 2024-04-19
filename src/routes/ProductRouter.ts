@@ -10,8 +10,13 @@ productRouter.post(
     upload.array('product-variant-image', 20),
     productController.store,
 );
-
+productRouter.post(
+    '/products/:id',
+    upload.array('product-variant-image', 20),
+    productController.update,
+);
 productRouter.get('/products', productController.getAll);
 productRouter.put('/products', productController.activeProducts);
+productRouter.get('/products/:id', productController.getOne);
 
 export default productRouter;

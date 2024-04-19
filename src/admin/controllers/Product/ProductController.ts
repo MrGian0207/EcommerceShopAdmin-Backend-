@@ -55,7 +55,7 @@ class ProductController {
                 variantQuantity,
                 variantRegularPrice,
                 variantSalePrice,
-                variantNumberImagesOfVariant,
+                variantNumberImagesOfVariants,
             } = req.body;
             const variantImages = req.files;
 
@@ -80,7 +80,7 @@ class ProductController {
                 !variantQuantity ||
                 !variantRegularPrice ||
                 !variantSalePrice ||
-                !variantNumberImagesOfVariant
+                !variantNumberImagesOfVariants
             ) {
                 return res.status(400).json({
                     status: 'Error',
@@ -88,46 +88,8 @@ class ProductController {
                 });
             }
 
-            const variantNameArray: string[] = (variantName as string)
-                .trim()
-                .slice(0, -1)
-                .split('-')
-                .map((name) => name.replace(/"/g, ' ').trim());
-
-            const variantSizeArray: string[] = (variantSize as string)
-                .trim()
-                .slice(0, -1)
-                .split('-')
-                .map((size) => size.replace(/"/g, ' ').trim());
-
-            const variantColorArray: string[] = (variantColor as string)
-                .trim()
-                .slice(0, -1)
-                .split('-')
-                .map((color) => color.replace(/"/g, ' ').trim());
-
-            const variantProductSKUArray: string[] = (
-                variantProductSKU as string
-            )
-                .trim()
-                .split(' ');
-
-            const variantQuantityArray: string[] = (variantQuantity as string)
-                .trim()
-                .split(' ');
-
-            const variantRegularPriceArray: string[] = (
-                variantRegularPrice as string
-            )
-                .trim()
-                .split(' ');
-
-            const variantSalePriceArray: string[] = (variantSalePrice as string)
-                .trim()
-                .split(' ');
-
             const variantNumberImagesOfVariantArray: number[] = (
-                variantNumberImagesOfVariant as string
+                variantNumberImagesOfVariants as string
             )
                 .trim()
                 .split(' ')
@@ -150,7 +112,7 @@ class ProductController {
             });
 
             variantName &&
-                variantNameArray.forEach(async (variantName, index) => {
+                (variantName as string[]).forEach(async (name, index) => {
                     try {
                         let imagesFileVariant: string[] = [];
                         for (
@@ -172,14 +134,13 @@ class ProductController {
                             }
                         }
                         const variant = new VariantModel({
-                            variantName: variantName,
-                            variantSize: variantSizeArray[index],
-                            variantColor: variantColorArray[index],
-                            variantProductSKU: variantProductSKUArray[index],
-                            variantQuantity: variantQuantityArray[index],
-                            variantRegularPrice:
-                                variantRegularPriceArray[index],
-                            variantSalePrice: variantSalePriceArray[index],
+                            variantName: name,
+                            variantSize: variantSize[index],
+                            variantColor: variantColor[index],
+                            variantProductSKU: variantProductSKU[index],
+                            variantQuantity: variantQuantity[index],
+                            variantRegularPrice: variantRegularPrice[index],
+                            variantSalePrice: variantSalePrice[index],
                             variantImagesFile: imagesFileVariant,
                             product: product._id,
                         });
@@ -285,6 +246,240 @@ class ProductController {
             return res.status(500).json({
                 status: 'Error',
                 message: 'Error activating product',
+            });
+        }
+    }
+
+    async getOne(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+
+            const product = await ProductModel.findById(id).populate(
+                'variants',
+            );
+            if (product) {
+                return res.status(200).json({
+                    status: 'Success',
+                    data: product,
+                });
+            }
+        } catch (error) {
+            return res.status(500).json({
+                status: 'Error',
+                message: 'Error fetching product',
+            });
+        }
+    }
+
+    async update(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+            const {
+                name,
+                title,
+                slug,
+                description,
+                category,
+                subCategory,
+                brand,
+                gender,
+                status,
+                productCode,
+                tag,
+                featureProduct,
+                defaultVariant,
+                variantName,
+                variantSize,
+                variantColor,
+                variantProductSKU,
+                variantQuantity,
+                variantRegularPrice,
+                variantSalePrice,
+                variantNumberImagesOfVariants,
+            } = req.body;
+            const variantImages = req.files;
+            console.log(variantImages);
+            if (
+                !name ||
+                !title ||
+                !slug ||
+                !description ||
+                !category ||
+                !subCategory ||
+                !brand ||
+                !gender ||
+                !status ||
+                !productCode ||
+                !tag ||
+                !featureProduct ||
+                !defaultVariant ||
+                !variantName ||
+                !variantSize ||
+                !variantColor ||
+                !variantProductSKU ||
+                !variantQuantity ||
+                !variantRegularPrice ||
+                !variantSalePrice ||
+                !variantNumberImagesOfVariants
+            ) {
+                return res.status(400).json({
+                    status: 'Error',
+                    message: 'Missing required fields',
+                });
+            }
+
+            const product = await ProductModel.findByIdAndUpdate(id, {
+                name,
+                title,
+                slug,
+                description,
+                category,
+                subCategory,
+                brand,
+                gender,
+                status,
+                productCode,
+                tag,
+                featureProduct,
+                defaultVariant,
+            });
+
+            if (product) {
+                const variantNumberImagesOfVariantArray: number[] = (
+                    variantNumberImagesOfVariants as string
+                )
+                    .trim()
+                    .split(' ')
+                    .map((numberImages) => Number.parseInt(numberImages));
+
+                variantName &&
+                    (variantName as string[]).forEach(async (name, index) => {
+                        try {
+                            if (
+                                variantImages?.length &&
+                                (variantImages as [])?.length > 0
+                            ) {
+                                let imagesFileVariant: string[] = [];
+                                for (
+                                    let i = 0;
+                                    i <
+                                    variantNumberImagesOfVariantArray[index];
+                                    i++
+                                ) {
+                                    if (
+                                        variantImages &&
+                                        Array.isArray(variantImages)
+                                    ) {
+                                        const imageUrl =
+                                            await cloudinary.uploader.upload(
+                                                variantImages[0]?.path,
+                                                {
+                                                    folder: 'variant',
+                                                },
+                                            );
+                                        imagesFileVariant.push(
+                                            imageUrl.secure_url,
+                                        );
+
+                                        variantImages?.splice(0, 1);
+                                    }
+                                }
+
+                                const variantIsExisted =
+                                    await VariantModel.findOne({
+                                        variantName: name,
+                                    });
+                                if (!variantIsExisted) {
+                                    const variant = new VariantModel({
+                                        variantName: name,
+                                        variantSize: variantSize[index],
+                                        variantColor: variantColor[index],
+                                        variantProductSKU:
+                                            variantProductSKU[index],
+                                        variantQuantity: variantQuantity[index],
+                                        variantRegularPrice:
+                                            variantRegularPrice[index],
+                                        variantSalePrice:
+                                            variantSalePrice[index],
+                                        variantImagesFile: imagesFileVariant,
+                                        product: product._id,
+                                    });
+
+                                    await variant.save();
+
+                                    await product.updateOne({
+                                        $push: { variants: variant._id },
+                                    });
+                                } else {
+                                    const variant =
+                                        await VariantModel.findOneAndUpdate(
+                                            { variantName: name },
+                                            {
+                                                variantName: name,
+                                                variantSize: variantSize[index],
+                                                variantColor:
+                                                    variantColor[index],
+                                                variantProductSKU:
+                                                    variantProductSKU[index],
+                                                variantQuantity:
+                                                    variantQuantity[index],
+                                                variantRegularPrice:
+                                                    variantRegularPrice[index],
+                                                variantSalePrice:
+                                                    variantSalePrice[index],
+                                                variantImagesFile:
+                                                    imagesFileVariant,
+                                            },
+                                        );
+                                    if (!variant) {
+                                        return res.status(500).json({
+                                            status: 'Error',
+                                            message: 'Error processing variant',
+                                        });
+                                    }
+                                }
+                            } else {
+                                const variant =
+                                    await VariantModel.findOneAndUpdate(
+                                        { variantName: name },
+                                        {
+                                            variantName: name,
+                                            variantSize: variantSize[index],
+                                            variantColor: variantColor[index],
+                                            variantProductSKU:
+                                                variantProductSKU[index],
+                                            variantQuantity:
+                                                variantQuantity[index],
+                                            variantRegularPrice:
+                                                variantRegularPrice[index],
+                                            variantSalePrice:
+                                                variantSalePrice[index],
+                                        },
+                                    );
+                                if (!variant) {
+                                    return res.status(500).json({
+                                        status: 'Error',
+                                        message: 'Error processing variant',
+                                    });
+                                }
+                            }
+                        } catch (error) {
+                            return res.status(500).json({
+                                status: 'Error',
+                                message: 'Error processing variant',
+                            });
+                        }
+                    });
+            }
+
+            return res.status(200).json({
+                status: 'Success',
+                message: 'Product updated successfully',
+            });
+        } catch (error) {
+            return res.status(500).json({
+                status: 'Error',
+                message: 'Error processing variant',
             });
         }
     }
