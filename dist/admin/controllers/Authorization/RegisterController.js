@@ -82,6 +82,7 @@ class RegisterController {
                         gender,
                         phoneNumber,
                         emailAddress: Email,
+                        status: 'Not-verified',
                         password: hashPassword,
                     });
                     yield newUser

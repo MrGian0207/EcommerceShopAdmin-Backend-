@@ -24,15 +24,24 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
-const UserSchema = new mongoose_1.Schema({
-    fullName: { type: String, required: true },
-    gender: { type: String, required: true },
-    phoneNumber: { type: Number, required: true },
-    emailAddress: { type: String, required: true },
-    password: { type: String, required: true },
-    status: { type: String, required: true }
+const OrderSchema = new mongoose_1.Schema({
+    customerName: { type: 'String', required: true },
+    customerPhone: { type: 'String', required: true },
+    customerEmail: { type: 'String', required: true },
+    customerAddress: { type: 'String', required: true },
+    methodDelivery: { type: 'String', required: true },
+    statusDelivery: { type: 'String', required: true },
+    shippingFee: { type: 'Number', required: true },
+    imageDefault: { type: 'String' },
+    colorProducts: [{ type: 'String', required: true }],
+    quantityProducts: [{ type: 'Number', required: true }],
+    sizeProducts: [{ type: 'String', required: true }],
+    priceProducts: [{ type: 'Number', required: true }],
+    subtotal: { type: 'Number', required: true },
+    total: { type: 'Number', required: true },
+    products: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: 'Product' }],
 }, {
     timestamps: true,
 });
-const UserModel = mongoose_1.default.model('User', UserSchema);
-exports.default = UserModel;
+const OrdersModel = mongoose_1.default.model('Order', OrderSchema);
+exports.default = OrdersModel;

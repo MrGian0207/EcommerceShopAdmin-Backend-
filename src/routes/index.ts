@@ -7,26 +7,32 @@ import mainCategoriesRouter from './MainCategoriesRouter';
 import subCategoriesRouter from './SubCategoriesRouter';
 import brandsRouter from './BrandsRouter';
 import productRouter from './ProductRouter';
+import ordersRouter from './OrdersRouter';
 
 import { Express } from 'express';
+import usersRouter from './UsersRouter';
 
 function Route(app: Express) {
-    app.use('/', registerRouter);
+  app.use('/', registerRouter);
 
-    app.use('/', loginRouter);
+  app.use('/', loginRouter);
 
-    app.use('/', dashboardRouter);
+  app.use('/', dashboardRouter);
 
-    app.use('/', refreshTokenRouter);
+  app.use('/', refreshTokenRouter);
 
-    app.use('/', logoutRouter);
+  app.use('/', logoutRouter);
 
-    app.use('/', mainCategoriesRouter);
+  app.use('/', mainCategoriesRouter);
 
-    app.use('/', subCategoriesRouter);
+  app.use('/', subCategoriesRouter);
 
-    app.use('/', brandsRouter);
+  app.use('/', brandsRouter);
 
-    app.use('/', productRouter);
+  app.use('/', productRouter);
+
+  app.use('/', ordersRouter);
+
+  app.use('/', usersRouter);
 }
 export default Route;

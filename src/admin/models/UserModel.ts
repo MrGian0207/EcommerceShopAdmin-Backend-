@@ -6,6 +6,7 @@ interface User {
     phoneNumber?: number;
     emailAddress?: string;
     password?: string;
+    status?: string;
 }
 
 const UserSchema = new Schema<User>(
@@ -15,6 +16,7 @@ const UserSchema = new Schema<User>(
         phoneNumber: { type: Number, required: true },
         emailAddress: { type: String, required: true },
         password: { type: String, required: true },
+        status: { type: String, required: true}
     },
     {
         timestamps: true,

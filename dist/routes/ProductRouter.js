@@ -13,4 +13,5 @@ productRouter.post('/products/:id', multer_1.default.array('product-variant-imag
 productRouter.get('/products', productController.getAll);
 productRouter.put('/products', productController.activeProducts);
 productRouter.get('/products/:id', productController.getOne);
+productRouter.delete('/products/delete/:id', productController.deleteOne);
 exports.default = productRouter;

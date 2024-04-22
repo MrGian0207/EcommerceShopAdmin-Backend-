@@ -8,7 +8,7 @@ interface Variant {
     variantQuantity?: string;
     variantRegularPrice?: string;
     variantSalePrice?: string;
-    variantImagesFile?: File[];
+    variantImagesFile?: string[];
     product?: Product;
 }
 
