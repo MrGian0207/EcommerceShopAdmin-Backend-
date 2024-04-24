@@ -10,4 +10,7 @@ const slideController = new SlideController_1.default();
 const slideRouter = (0, express_1.Router)();
 slideRouter.post('/slides/add', multer_1.default.single('slide-image'), slideController.store);
 slideRouter.get('/slides', slideController.getAll);
+slideRouter.get('/slides/:id', slideController.getOne);
+slideRouter.post('/slides/:id', multer_1.default.single('slide-image'), slideController.update);
+slideRouter.delete('/slides/delete/:id', slideController.deleteOne);
 exports.default = slideRouter;

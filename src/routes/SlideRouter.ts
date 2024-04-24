@@ -12,5 +12,11 @@ slideRouter.post(
 );
 
 slideRouter.get('/slides', slideController.getAll);
-
+slideRouter.get('/slides/:id', slideController.getOne);
+slideRouter.post(
+  '/slides/:id',
+  upload.single('slide-image'),
+  slideController.update,
+);
+slideRouter.delete('/slides/delete/:id', slideController.deleteOne);
 export default slideRouter;
