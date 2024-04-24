@@ -11,6 +11,8 @@ import ordersRouter from './OrdersRouter';
 
 import { Express } from 'express';
 import usersRouter from './UsersRouter';
+import newletterRouter from './NewletterRouter';
+import slideRouter from './SlideRouter';
 
 function Route(app: Express) {
   app.use('/', registerRouter);
@@ -34,5 +36,9 @@ function Route(app: Express) {
   app.use('/', ordersRouter);
 
   app.use('/', usersRouter);
+
+  app.use('/', newletterRouter);
+
+  app.use('/', slideRouter);
 }
 export default Route;

@@ -34,6 +34,7 @@ interface Product {
 }
 
 class ProductController {
+  
   async store(req: Request, res: Response) {
     try {
       const {

@@ -27,7 +27,7 @@ class BrandsController {
                 return res.status(400).json({
                     status: 'Error',
                     message: 'Failed to upload image',
-                });
+                }); 
             }
 
             // Tạo đối tượng BrandsModel
