@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const UserModel_1 = __importDefault(require("../../models/UserModel"));
+const cloudinary_1 = __importDefault(require("../../../utils/cloudinary"));
 class UsersController {
     getAll(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -49,6 +50,85 @@ class UsersController {
                 res.status(404).json({
                     status: 'Error',
                     message: 'User have not been found',
+                });
+            }
+        });
+    }
+    update(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { id, name, emailAddress, phone, gender, about } = req.body;
+                const image = req.file;
+                const user = yield UserModel_1.default.findById(id);
+                if (image && !(user === null || user === void 0 ? void 0 : user.image)) {
+                    const imageUrl = yield cloudinary_1.default.uploader.upload(image.path, {
+                        folder: 'users',
+                    });
+                    // Kiểm tra nếu hình ảnh không tải lên thành công
+                    if (!imageUrl || !imageUrl.secure_url) {
+                        return res.status(400).json({
+                            status: 'Error',
+                            message: 'Failed to upload image',
+                        });
+                    }
+                    if (user) {
+                        user.image = imageUrl === null || imageUrl === void 0 ? void 0 : imageUrl.secure_url;
+                    }
+                    user === null || user === void 0 ? void 0 : user.save();
+                }
+                else if (image && (user === null || user === void 0 ? void 0 : user.image) !== undefined) {
+                    const deletedImage = user === null || user === void 0 ? void 0 : user.image;
+                    const publicIdRegex = /\/users\/([^/.]+)/;
+                    const matches = deletedImage.match(publicIdRegex);
+                    yield cloudinary_1.default.uploader.destroy(`users/${matches && matches[1]}`, (error, result) => {
+                        if (error) {
+                            console.error('Failed to delete image:', error);
+                            // Xử lý lỗi
+                        }
+                        else {
+                            console.log('Image deleted successfully:', result);
+                            // Xử lý khi xóa thành công
+                        }
+                    });
+                    const imageUrl = yield cloudinary_1.default.uploader.upload(image.path, {
+                        folder: 'users',
+                    });
+                    if (!imageUrl || !imageUrl.secure_url) {
+                        return res.status(400).json({
+                            status: 'Error',
+                            message: 'Failed to upload image',
+                        });
+                    }
+                    if (user) {
+                        user.fullName = name;
+                        user.emailAddress = emailAddress;
+                        user.phoneNumber = phone;
+                        user.gender = gender;
+                        user.about = about;
+                        user.image = imageUrl === null || imageUrl === void 0 ? void 0 : imageUrl.secure_url;
+                    }
+                    user === null || user === void 0 ? void 0 : user.save();
+                }
+                else {
+                    if (user) {
+                        user.fullName = name;
+                        user.emailAddress = emailAddress;
+                        user.phoneNumber = phone;
+                        user.gender = gender;
+                        user.about = about;
+                    }
+                    user === null || user === void 0 ? void 0 : user.save();
+                }
+                return res.status(200).json({
+                    status: 'Success',
+                    message: 'User have been updated successfully !!!',
+                });
+            }
+            catch (error) {
+                console.log(error);
+                return res.status(404).json({
+                    status: 'Error',
+                    message: 'User have not been updated',
                 });
             }
         });

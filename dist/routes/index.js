@@ -16,6 +16,7 @@ const OrdersRouter_1 = __importDefault(require("./OrdersRouter"));
 const UsersRouter_1 = __importDefault(require("./UsersRouter"));
 const NewletterRouter_1 = __importDefault(require("./NewletterRouter"));
 const SlideRouter_1 = __importDefault(require("./SlideRouter"));
+const SettingsRouter_1 = __importDefault(require("./SettingsRouter"));
 function Route(app) {
     app.use('/', RegisterRouter_1.default);
     app.use('/', LoginRouter_1.default);
@@ -30,5 +31,6 @@ function Route(app) {
     app.use('/', UsersRouter_1.default);
     app.use('/', NewletterRouter_1.default);
     app.use('/', SlideRouter_1.default);
+    app.use('/', SettingsRouter_1.default);
 }
 exports.default = Route;

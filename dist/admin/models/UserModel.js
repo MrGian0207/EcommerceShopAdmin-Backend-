@@ -30,7 +30,10 @@ const UserSchema = new mongoose_1.Schema({
     phoneNumber: { type: Number, required: true },
     emailAddress: { type: String, required: true },
     password: { type: String, required: true },
-    status: { type: String, required: true }
+    status: { type: String, required: true },
+    role: { type: String },
+    about: { type: String },
+    image: { type: String },
 }, {
     timestamps: true,
 });

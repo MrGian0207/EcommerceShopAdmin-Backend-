@@ -75,6 +75,7 @@ class RegisterController {
           phoneNumber,
           emailAddress: Email,
           status: 'Not-verified',
+          role: 'Staff',
           password: hashPassword,
         });
 

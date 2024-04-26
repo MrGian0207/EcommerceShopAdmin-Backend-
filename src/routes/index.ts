@@ -8,11 +8,12 @@ import subCategoriesRouter from './SubCategoriesRouter';
 import brandsRouter from './BrandsRouter';
 import productRouter from './ProductRouter';
 import ordersRouter from './OrdersRouter';
-
-import { Express } from 'express';
 import usersRouter from './UsersRouter';
 import newletterRouter from './NewletterRouter';
 import slideRouter from './SlideRouter';
+import settingsRouter from './SettingsRouter';
+
+import { Express } from 'express';
 
 function Route(app: Express) {
   app.use('/', registerRouter);
@@ -40,5 +41,7 @@ function Route(app: Express) {
   app.use('/', newletterRouter);
 
   app.use('/', slideRouter);
+
+  app.use('/', settingsRouter);
 }
 export default Route;

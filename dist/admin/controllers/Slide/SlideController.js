@@ -118,8 +118,6 @@ class SlideController {
                 const { id } = req.params;
                 const { heading, primaryButtonText, primaryButtonLink, secondaryButtonText, secondaryButtonLink, description, displaySlide, } = req.body;
                 const image = req.file;
-                console.log(req.body);
-                console.log(image);
                 const slide = yield SlideModel_1.default.findById(id);
                 // Tải hình ảnh lên Cloudinary
                 let imageUrl;
