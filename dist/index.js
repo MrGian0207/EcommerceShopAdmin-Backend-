@@ -7,6 +7,8 @@ const method_override_1 = __importDefault(require("method-override"));
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const index_1 = __importDefault(require("./routes/index"));
+const express_session_1 = __importDefault(require("express-session"));
+const passport_1 = __importDefault(require("passport"));
 const connectionDB_1 = __importDefault(require("./config/connectionDB"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const app = (0, express_1.default)();
@@ -21,6 +23,13 @@ app.use(express_1.default.json({ limit: '50mb' }));
 //methodOverride
 app.use((0, method_override_1.default)());
 (0, connectionDB_1.default)();
+app.use((0, express_session_1.default)({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false },
+}));
+app.use(passport_1.default.session());
 (0, index_1.default)(app);
 app.listen(8000, () => {
     console.log('Example app listening on port 8000!');

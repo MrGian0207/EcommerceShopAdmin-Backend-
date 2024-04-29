@@ -41,7 +41,7 @@ class LoginController {
             const data = req.body;
             //JsonWebToken
             const accessToken = jsonwebtoken_1.default.sign(data, process.env.ACCESS_TOKEN_SECRET_KEY, {
-                expiresIn: '30s',
+                expiresIn: '2592000s',
             });
             const refreshToken = jsonwebtoken_1.default.sign(data, process.env.REFRESH_TOKEN_SECRET_KEY);
             //Clear whitespace
@@ -69,7 +69,11 @@ class LoginController {
                         sameSite: 'strict',
                         expires: currentDate,
                     });
-                    res.status(200).json({ response: User.Success, accessToken });
+                    res.status(200).json({
+                        response: User.Success,
+                        accessToken,
+                        idUser: existed_User._id,
+                    });
                 }
                 else {
                     res.status(406).json(User.Error.Password_Incorrect);

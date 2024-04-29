@@ -2,6 +2,8 @@ import methodOverride from 'method-override';
 import express, { Express } from 'express';
 import cors from 'cors';
 import Route from './routes/index';
+import session from 'express-session';
+import passport from 'passport';
 
 import ConnectMongoDB from './config/connectionDB';
 import cookieParser from 'cookie-parser';
@@ -26,8 +28,18 @@ app.use(methodOverride());
 
 ConnectMongoDB();
 
+app.use(
+  session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false },
+  }),
+);
+app.use(passport.session());
+
 Route(app);
 
 app.listen(8000, () => {
-    console.log('Example app listening on port 8000!');
+  console.log('Example app listening on port 8000!');
 });

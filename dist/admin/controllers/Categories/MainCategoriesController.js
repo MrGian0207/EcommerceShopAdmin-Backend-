@@ -65,11 +65,23 @@ class AddMainCategoriesController {
     }
     getAll(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const mainCategories = yield MainCategoriesModel_1.default.find();
+            var _a, _b;
+            const page = ((_a = req.query) === null || _a === void 0 ? void 0 : _a.page)
+                ? (_b = req.query) === null || _b === void 0 ? void 0 : _b.page
+                : '1';
+            const brandsPerPage = 3;
+            let numberOfMainCategories = 0;
+            yield MainCategoriesModel_1.default.countDocuments({}).then((countDocuments) => {
+                numberOfMainCategories = Math.ceil(countDocuments / brandsPerPage);
+            });
+            const mainCategories = yield MainCategoriesModel_1.default.find()
+                .skip((parseInt(page) - 1) * brandsPerPage)
+                .limit(brandsPerPage);
             if (mainCategories) {
                 return res.status(200).json({
                     status: 'Success',
                     data: mainCategories,
+                    numbers: numberOfMainCategories,
                 });
             }
             else {
@@ -134,9 +146,7 @@ class AddMainCategoriesController {
                             (mainCategory.title = title.trim()),
                             (mainCategory.slug = slug.trim()),
                             (mainCategory.description = description.trim()),
-                            (mainCategory.image = imageUrl
-                                ? imageUrl.secure_url
-                                : '');
+                            (mainCategory.image = imageUrl ? imageUrl.secure_url : '');
                         mainCategory === null || mainCategory === void 0 ? void 0 : mainCategory.save();
                         // Trả về kết quả thành công
                         return res.status(200).json({

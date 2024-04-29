@@ -26,11 +26,22 @@ class NewletterController {
 
   async getAll(req: Request, res: Response) {
     try {
-      const newletters = await NewletterModel.find();
+      const page: string = (req.query?.page as string)
+        ? (req.query?.page as string)
+        : '1';
+      const brandsPerPage: number = 3;
+      let numberOfNewlleters: number = 0;
+      await NewletterModel.countDocuments({}).then((countDocuments) => {
+        numberOfNewlleters = Math.ceil(countDocuments / brandsPerPage);
+      });
+      const newletters = await NewletterModel.find()
+        .skip((parseInt(page) - 1) * brandsPerPage)
+        .limit(brandsPerPage);
       if (newletters) {
         return res.status(200).json({
           status: 'Success',
           data: newletters,
+          numbers: numberOfNewlleters,
         });
       }
     } catch (error) {

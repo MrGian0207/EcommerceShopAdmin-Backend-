@@ -38,12 +38,24 @@ class NewletterController {
     }
     getAll(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            var _a, _b;
             try {
-                const newletters = yield NewletterModel_1.default.find();
+                const page = ((_a = req.query) === null || _a === void 0 ? void 0 : _a.page)
+                    ? (_b = req.query) === null || _b === void 0 ? void 0 : _b.page
+                    : '1';
+                const brandsPerPage = 3;
+                let numberOfNewlleters = 0;
+                yield NewletterModel_1.default.countDocuments({}).then((countDocuments) => {
+                    numberOfNewlleters = Math.ceil(countDocuments / brandsPerPage);
+                });
+                const newletters = yield NewletterModel_1.default.find()
+                    .skip((parseInt(page) - 1) * brandsPerPage)
+                    .limit(brandsPerPage);
                 if (newletters) {
                     return res.status(200).json({
                         status: 'Success',
                         data: newletters,
+                        numbers: numberOfNewlleters,
                     });
                 }
             }

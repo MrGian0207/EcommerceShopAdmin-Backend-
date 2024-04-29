@@ -135,10 +135,21 @@ class OrdersController {
 
   async getAll(req: Request, res: Response) {
     try {
-      const orders = await OrdersModel.find();
+      const page: string = (req.query?.page as string)
+        ? (req.query?.page as string)
+        : '1';
+      const brandsPerPage: number = 3;
+      let numberOfOrders: number = 0;
+      await OrdersModel.countDocuments({}).then((countDocuments) => {
+        numberOfOrders = Math.ceil(countDocuments / brandsPerPage);
+      });
+      const orders = await OrdersModel.find()
+        .skip((parseInt(page) - 1) * brandsPerPage)
+        .limit(brandsPerPage);
       return res.json({
         status: 'Success',
         data: orders,
+        numbers: numberOfOrders,
       });
     } catch (error) {
       console.log(error);

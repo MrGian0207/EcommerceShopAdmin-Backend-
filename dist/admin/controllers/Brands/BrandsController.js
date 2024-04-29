@@ -65,11 +65,23 @@ class BrandsController {
     }
     getAll(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const brands = yield BrandsModel_1.default.find();
+            var _a, _b;
+            const page = ((_a = req.query) === null || _a === void 0 ? void 0 : _a.page)
+                ? (_b = req.query) === null || _b === void 0 ? void 0 : _b.page
+                : '1';
+            const brandsPerPage = 3;
+            let numberOfBrands = 0;
+            yield BrandsModel_1.default.countDocuments({}).then((countDocuments) => {
+                numberOfBrands = Math.ceil(countDocuments / brandsPerPage);
+            });
+            const brands = yield BrandsModel_1.default.find()
+                .skip((parseInt(page) - 1) * brandsPerPage)
+                .limit(brandsPerPage);
             if (brands) {
                 return res.status(200).json({
                     status: 'Success',
                     data: brands,
+                    numbers: numberOfBrands,
                 });
             }
             else {

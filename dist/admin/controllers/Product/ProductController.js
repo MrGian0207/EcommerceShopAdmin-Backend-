@@ -144,8 +144,19 @@ class ProductController {
     }
     getAll(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            var _a, _b;
             try {
-                const products = yield ProductModel_1.ProductModel.find();
+                const page = ((_a = req.query) === null || _a === void 0 ? void 0 : _a.page)
+                    ? (_b = req.query) === null || _b === void 0 ? void 0 : _b.page
+                    : '1';
+                const brandsPerPage = 3;
+                let numberOfProducts = 0;
+                yield ProductModel_1.ProductModel.countDocuments({}).then((countDocuments) => {
+                    numberOfProducts = Math.ceil(countDocuments / brandsPerPage);
+                });
+                const products = yield ProductModel_1.ProductModel.find()
+                    .skip((parseInt(page) - 1) * brandsPerPage)
+                    .limit(brandsPerPage);
                 let variants = [];
                 let quantity = [];
                 yield Promise.all(products.map((product, index) => __awaiter(this, void 0, void 0, function* () {
@@ -167,6 +178,7 @@ class ProductController {
                     return res.status(200).json({
                         status: 'Success',
                         data: products,
+                        numbers: numberOfProducts,
                         variants: variants,
                         quantity: quantity,
                     });

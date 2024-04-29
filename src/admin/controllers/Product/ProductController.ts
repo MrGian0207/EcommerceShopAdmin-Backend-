@@ -34,7 +34,6 @@ interface Product {
 }
 
 class ProductController {
-  
   async store(req: Request, res: Response) {
     try {
       const {
@@ -204,7 +203,17 @@ class ProductController {
 
   async getAll(req: Request, res: Response) {
     try {
-      const products = await ProductModel.find();
+      const page: string = (req.query?.page as string)
+        ? (req.query?.page as string)
+        : '1';
+      const brandsPerPage: number = 3;
+      let numberOfProducts: number = 0;
+      await ProductModel.countDocuments({}).then((countDocuments) => {
+        numberOfProducts = Math.ceil(countDocuments / brandsPerPage);
+      });
+      const products = await ProductModel.find()
+        .skip((parseInt(page) - 1) * brandsPerPage)
+        .limit(brandsPerPage);
       let variants: Variant[] = [];
       let quantity: number[] = [];
 
@@ -235,6 +244,7 @@ class ProductController {
         return res.status(200).json({
           status: 'Success',
           data: products,
+          numbers: numberOfProducts,
           variants: variants,
           quantity: quantity,
         });

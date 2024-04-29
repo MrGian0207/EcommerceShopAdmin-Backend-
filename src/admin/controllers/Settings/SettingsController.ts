@@ -19,10 +19,21 @@ interface User {
 class SettingsController {
   async getUser(req: Request, res: Response) {
     try {
-      const user = await UserModel.find();
+      const page: string = (req.query?.page as string)
+        ? (req.query?.page as string)
+        : '1';
+      const brandsPerPage: number = 3;
+      let numberOfUsers: number = 0;
+      await UserModel.countDocuments({}).then((countDocuments) => {
+        numberOfUsers = Math.ceil(countDocuments / brandsPerPage);
+      });
+      const user = await UserModel.find()
+        .skip((parseInt(page) - 1) * brandsPerPage)
+        .limit(brandsPerPage);
       return res.status(200).json({
         status: 'Success',
         data: user,
+        numbers: numberOfUsers,
       });
     } catch (error) {
       return res.status(500).json({

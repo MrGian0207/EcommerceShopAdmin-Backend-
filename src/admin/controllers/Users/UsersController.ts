@@ -5,10 +5,21 @@ import cloudinary from '../../../utils/cloudinary';
 class UsersController {
   async getAll(req: Request, res: Response) {
     try {
-      const users = await UserModel.find();
+      const page: string = (req.query?.page as string)
+        ? (req.query?.page as string)
+        : '1';
+      const brandsPerPage: number = 3;
+      let numberOfUsers: number = 0;
+      await UserModel.countDocuments({}).then((countDocuments) => {
+        numberOfUsers = Math.ceil(countDocuments / brandsPerPage);
+      });
+      const users = await UserModel.find()
+        .skip((parseInt(page) - 1) * brandsPerPage)
+        .limit(brandsPerPage);
       return res.status(200).json({
         status: 'Success',
         data: users,
+        numbers: numberOfUsers,
       });
     } catch (error) {
       console.log(error);

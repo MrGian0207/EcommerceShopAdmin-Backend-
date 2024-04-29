@@ -34,7 +34,7 @@ class RefreshTokenController {
                     const accessToken = jsonwebtoken_1.default.sign({
                         id: userRefreshToken.userId,
                     }, process.env.ACCESS_TOKEN_SECRET_KEY, {
-                        expiresIn: '30s',
+                        expiresIn: '2592000s',
                     });
                     res.status(200).json({
                         status: 'success',

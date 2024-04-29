@@ -21,12 +21,7 @@ class SubCategoriesController {
                 const { name, title, slug, description, category } = req.body;
                 const image = req.file;
                 // Kiểm tra các trường bắt buộc
-                if (!name ||
-                    !title ||
-                    !slug ||
-                    !description ||
-                    !category ||
-                    !image) {
+                if (!name || !title || !slug || !description || !category || !image) {
                     return res.status(400).json({
                         status: 'Error',
                         message: 'Missing required fields',
@@ -71,11 +66,23 @@ class SubCategoriesController {
     }
     getAll(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const subCategories = yield SubCategoriesModel_1.default.find();
+            var _a, _b;
+            const page = ((_a = req.query) === null || _a === void 0 ? void 0 : _a.page)
+                ? (_b = req.query) === null || _b === void 0 ? void 0 : _b.page
+                : '1';
+            const brandsPerPage = 3;
+            let numberOfSubCategories = 0;
+            yield SubCategoriesModel_1.default.countDocuments({}).then((countDocuments) => {
+                numberOfSubCategories = Math.ceil(countDocuments / brandsPerPage);
+            });
+            const subCategories = yield SubCategoriesModel_1.default.find()
+                .skip((parseInt(page) - 1) * brandsPerPage)
+                .limit(brandsPerPage);
             if (subCategories) {
                 return res.status(200).json({
                     status: 'Success',
                     data: subCategories,
+                    numbers: numberOfSubCategories,
                 });
             }
             else {
@@ -141,9 +148,7 @@ class SubCategoriesController {
                             (subCategory.slug = slug.trim()),
                             (subCategory.description = description.trim()),
                             (subCategory.parentCategory = category.trim()),
-                            (subCategory.image = imageUrl
-                                ? imageUrl.secure_url
-                                : '');
+                            (subCategory.image = imageUrl ? imageUrl.secure_url : '');
                         subCategory === null || subCategory === void 0 ? void 0 : subCategory.save();
                         // Trả về kết quả thành công
                         return res.status(200).json({

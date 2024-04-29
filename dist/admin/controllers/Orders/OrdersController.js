@@ -82,11 +82,23 @@ class OrdersController {
     }
     getAll(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            var _a, _b;
             try {
-                const orders = yield OrdersModel_1.default.find();
+                const page = ((_a = req.query) === null || _a === void 0 ? void 0 : _a.page)
+                    ? (_b = req.query) === null || _b === void 0 ? void 0 : _b.page
+                    : '1';
+                const brandsPerPage = 3;
+                let numberOfOrders = 0;
+                yield OrdersModel_1.default.countDocuments({}).then((countDocuments) => {
+                    numberOfOrders = Math.ceil(countDocuments / brandsPerPage);
+                });
+                const orders = yield OrdersModel_1.default.find()
+                    .skip((parseInt(page) - 1) * brandsPerPage)
+                    .limit(brandsPerPage);
                 return res.json({
                     status: 'Success',
                     data: orders,
+                    numbers: numberOfOrders,
                 });
             }
             catch (error) {

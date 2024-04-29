@@ -25,7 +25,7 @@ class RefreshTokenController {
                     },
                     process.env.ACCESS_TOKEN_SECRET_KEY as string,
                     {
-                        expiresIn: '30s',
+                        expiresIn: '2592000s',
                     },
                 );
                 res.status(200).json({

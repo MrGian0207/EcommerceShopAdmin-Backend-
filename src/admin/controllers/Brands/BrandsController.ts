@@ -57,11 +57,22 @@ class BrandsController {
   }
 
   async getAll(req: Request, res: Response) {
-    const brands = await BrandsModel.find();
+    const page: string = (req.query?.page as string)
+      ? (req.query?.page as string)
+      : '1';
+    const brandsPerPage: number = 3;
+    let numberOfBrands: number = 0;
+    await BrandsModel.countDocuments({}).then((countDocuments) => {
+      numberOfBrands = Math.ceil(countDocuments / brandsPerPage);
+    });
+    const brands = await BrandsModel.find()
+      .skip((parseInt(page) - 1) * brandsPerPage)
+      .limit(brandsPerPage);
     if (brands) {
       return res.status(200).json({
         status: 'Success',
         data: brands,
+        numbers: numberOfBrands,
       });
     } else {
       return res.status(404).json({

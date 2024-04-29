@@ -1,10 +1,11 @@
 import NewletterController from '../admin/controllers/Newletter/NewletterController';
 import { Router } from 'express';
+import authenToken from '../middlewares/authenToken';
 
 const newletterController = new NewletterController();
 const newletterRouter = Router();
 
-newletterRouter.post('/newletter/add', newletterController.store);
-newletterRouter.get('/newletter', newletterController.getAll);
+newletterRouter.post('/newletter/add', authenToken, newletterController.store);
+newletterRouter.get('/newletter', authenToken, newletterController.getAll);
 
 export default newletterRouter;

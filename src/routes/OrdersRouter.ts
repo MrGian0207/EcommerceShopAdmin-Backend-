@@ -1,13 +1,22 @@
 import OrdersController from '../admin/controllers/Orders/OrdersController';
 import { Router } from 'express';
+import authenToken from '../middlewares/authenToken';
 
 const ordersController = new OrdersController();
 const ordersRouter = Router();
 
-ordersRouter.post('/orders/add', ordersController.store);
-ordersRouter.get('/orders', ordersController.getAll);
-ordersRouter.get('/orders/:id', ordersController.getOne);
-ordersRouter.delete('/orders/delete/:id', ordersController.deleteOne);
-ordersRouter.put('/orders/:id/edit-status', ordersController.updateOne);
+ordersRouter.post('/orders/add', authenToken, ordersController.store);
+ordersRouter.get('/orders', authenToken, ordersController.getAll);
+ordersRouter.get('/orders/:id', authenToken, ordersController.getOne);
+ordersRouter.delete(
+  '/orders/delete/:id',
+  authenToken,
+  ordersController.deleteOne,
+);
+ordersRouter.put(
+  '/orders/:id/edit-status',
+  authenToken,
+  ordersController.updateOne,
+);
 
 export default ordersRouter;
