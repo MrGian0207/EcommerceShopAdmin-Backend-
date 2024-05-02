@@ -8,12 +8,19 @@ class UsersController {
       const page: string = (req.query?.page as string)
         ? (req.query?.page as string)
         : '1';
-      const brandsPerPage: number = 3;
+      const brandsPerPage: number = 10;
+      const search: string = req.query?.search as string;
       let numberOfUsers: number = 0;
       await UserModel.countDocuments({}).then((countDocuments) => {
         numberOfUsers = Math.ceil(countDocuments / brandsPerPage);
       });
-      const users = await UserModel.find()
+      const users = await UserModel.find({
+        $or: [
+          { name: { $regex: search, $options: 'i' } },
+          { emailAddress: { $regex: search, $options: 'i' } },
+          { phone: { $regex: search, $options: 'i' } },
+        ],
+      })
         .skip((parseInt(page) - 1) * brandsPerPage)
         .limit(brandsPerPage);
       return res.status(200).json({

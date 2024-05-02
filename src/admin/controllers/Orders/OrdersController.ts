@@ -138,12 +138,15 @@ class OrdersController {
       const page: string = (req.query?.page as string)
         ? (req.query?.page as string)
         : '1';
-      const brandsPerPage: number = 3;
+      const brandsPerPage: number = 10;
+      const search: string = req.query?.search as string;
       let numberOfOrders: number = 0;
       await OrdersModel.countDocuments({}).then((countDocuments) => {
         numberOfOrders = Math.ceil(countDocuments / brandsPerPage);
       });
-      const orders = await OrdersModel.find()
+      const orders = await OrdersModel.find({
+        customerName: { $regex: search, $options: 'i' },
+      })
         .skip((parseInt(page) - 1) * brandsPerPage)
         .limit(brandsPerPage);
       return res.json({

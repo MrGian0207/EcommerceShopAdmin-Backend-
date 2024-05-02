@@ -65,16 +65,19 @@ class AddMainCategoriesController {
     }
     getAll(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a, _b;
+            var _a, _b, _c;
             const page = ((_a = req.query) === null || _a === void 0 ? void 0 : _a.page)
                 ? (_b = req.query) === null || _b === void 0 ? void 0 : _b.page
                 : '1';
-            const brandsPerPage = 3;
+            const search = (_c = req.query) === null || _c === void 0 ? void 0 : _c.search;
+            const brandsPerPage = 10;
             let numberOfMainCategories = 0;
             yield MainCategoriesModel_1.default.countDocuments({}).then((countDocuments) => {
                 numberOfMainCategories = Math.ceil(countDocuments / brandsPerPage);
             });
-            const mainCategories = yield MainCategoriesModel_1.default.find()
+            const mainCategories = yield MainCategoriesModel_1.default.find({
+                name: { $regex: search, $options: 'i' },
+            })
                 .skip((parseInt(page) - 1) * brandsPerPage)
                 .limit(brandsPerPage);
             if (mainCategories) {

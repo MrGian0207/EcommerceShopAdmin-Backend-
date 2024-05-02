@@ -22,7 +22,7 @@ class SettingsController {
       const page: string = (req.query?.page as string)
         ? (req.query?.page as string)
         : '1';
-      const brandsPerPage: number = 3;
+      const brandsPerPage: number = 10;
       let numberOfUsers: number = 0;
       await UserModel.countDocuments({}).then((countDocuments) => {
         numberOfUsers = Math.ceil(countDocuments / brandsPerPage);

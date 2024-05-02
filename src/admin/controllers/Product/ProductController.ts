@@ -206,12 +206,15 @@ class ProductController {
       const page: string = (req.query?.page as string)
         ? (req.query?.page as string)
         : '1';
-      const brandsPerPage: number = 3;
+      const search: string = req.query?.search as string;
+      const brandsPerPage: number = 10;
       let numberOfProducts: number = 0;
       await ProductModel.countDocuments({}).then((countDocuments) => {
         numberOfProducts = Math.ceil(countDocuments / brandsPerPage);
       });
-      const products = await ProductModel.find()
+      const products = await ProductModel.find({
+        name: { $regex: search, $options: 'i' },
+      })
         .skip((parseInt(page) - 1) * brandsPerPage)
         .limit(brandsPerPage);
       let variants: Variant[] = [];

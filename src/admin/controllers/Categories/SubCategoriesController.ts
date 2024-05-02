@@ -61,12 +61,15 @@ class SubCategoriesController {
     const page: string = (req.query?.page as string)
       ? (req.query?.page as string)
       : '1';
-    const brandsPerPage: number = 3;
+    const brandsPerPage: number = 10;
+    const search: string = req.query?.search as string;
     let numberOfSubCategories: number = 0;
     await SubCategoriesModel.countDocuments({}).then((countDocuments) => {
       numberOfSubCategories = Math.ceil(countDocuments / brandsPerPage);
     });
-    const subCategories = await SubCategoriesModel.find()
+    const subCategories = await SubCategoriesModel.find({
+      name: { $regex: search, $options: 'i' },
+    })
       .skip((parseInt(page) - 1) * brandsPerPage)
       .limit(brandsPerPage);
     if (subCategories) {

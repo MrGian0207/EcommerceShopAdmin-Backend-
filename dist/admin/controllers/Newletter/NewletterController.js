@@ -38,17 +38,23 @@ class NewletterController {
     }
     getAll(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a, _b;
+            var _a, _b, _c;
             try {
                 const page = ((_a = req.query) === null || _a === void 0 ? void 0 : _a.page)
                     ? (_b = req.query) === null || _b === void 0 ? void 0 : _b.page
                     : '1';
-                const brandsPerPage = 3;
+                const search = (_c = req.query) === null || _c === void 0 ? void 0 : _c.search;
+                const brandsPerPage = 10;
                 let numberOfNewlleters = 0;
                 yield NewletterModel_1.default.countDocuments({}).then((countDocuments) => {
                     numberOfNewlleters = Math.ceil(countDocuments / brandsPerPage);
                 });
-                const newletters = yield NewletterModel_1.default.find()
+                const newletters = yield NewletterModel_1.default.find({
+                    emailNewletter: {
+                        $regex: search,
+                        $options: 'i',
+                    },
+                })
                     .skip((parseInt(page) - 1) * brandsPerPage)
                     .limit(brandsPerPage);
                 if (newletters) {
