@@ -9,7 +9,7 @@ dotenv.config();
 
 const User = {
   Success: {
-    status: 'OK',
+    status: 'Success',
     message: 'Login successful',
   },
   Error: {

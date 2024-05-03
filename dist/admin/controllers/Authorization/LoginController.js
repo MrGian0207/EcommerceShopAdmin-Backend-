@@ -20,7 +20,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const User = {
     Success: {
-        status: 'OK',
+        status: 'Success',
         message: 'Login successful',
     },
     Error: {

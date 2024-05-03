@@ -17,7 +17,7 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const saltRounds = 10;
 const User = {
     Success: {
-        status: 'OK',
+        status: 'Success',
         message: 'Registration successful',
     },
     Error: {

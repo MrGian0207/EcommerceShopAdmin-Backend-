@@ -2,6 +2,12 @@ import { Request, Response } from 'express';
 import cloudinary from '../../../utils/cloudinary';
 import { UploadApiResponse } from 'cloudinary';
 import MainCategoriesModel from '../../models/MainCategoriesModel';
+import { ProductModel } from '../../models/ProductModel';
+
+type TotalProductArrayType = {
+  name: string;
+  total: number;
+};
 
 class AddMainCategoriesController {
   async store(req: Request, res: Response) {
@@ -71,10 +77,22 @@ class AddMainCategoriesController {
     })
       .skip((parseInt(page) - 1) * brandsPerPage)
       .limit(brandsPerPage);
+
+    let productArray: TotalProductArrayType[] = [];
+    for (let i: number = 0; i < mainCategories.length; i++) {
+      await ProductModel.countDocuments({
+        category: mainCategories[i].name,
+      }).then((countDocuments) => {
+        const name: string = mainCategories[i]?.name as string;
+        productArray.push({ name, total: countDocuments });
+      });
+    }
+
     if (mainCategories) {
       return res.status(200).json({
         status: 'Success',
         data: mainCategories,
+        products: productArray,
         numbers: numberOfMainCategories,
       });
     } else {

@@ -27,10 +27,12 @@ class LogoutController {
                     refreshToken: RefreshToken,
                 });
                 res.clearCookie('refreshToken', { httpOnly: true });
-                res.status(200).json({ status: 'Logout' });
+                res
+                    .status(200)
+                    .json({ status: 'Success', message: 'Logout successfully' });
             }
             else {
-                res.status(200).json({
+                res.status(400).json({
                     status: 'Error',
                     message: 'RefreshToken Not Exitsted',
                 });

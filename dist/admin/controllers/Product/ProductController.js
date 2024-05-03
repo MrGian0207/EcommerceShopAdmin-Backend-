@@ -211,7 +211,7 @@ class ProductController {
                 if (product) {
                     return res.status(200).json({
                         status: 'Success',
-                        message: `${product === null || product === void 0 ? void 0 : product.name} active successfully`,
+                        message: `${product === null || product === void 0 ? void 0 : product.name} ${(product === null || product === void 0 ? void 0 : product.featureProduct) === 'active' ? 'Inactive' : 'Active'} successfully`,
                     });
                 }
                 else {

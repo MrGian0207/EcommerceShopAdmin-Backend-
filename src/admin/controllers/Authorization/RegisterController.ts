@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt';
 const saltRounds = 10;
 const User = {
   Success: {
-    status: 'OK',
+    status: 'Success',
     message: 'Registration successful',
   },
   Error: {

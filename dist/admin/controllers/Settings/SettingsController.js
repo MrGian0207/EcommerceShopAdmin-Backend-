@@ -80,7 +80,7 @@ class SettingsController {
                     });
                     // Phone Number has already been registered
                     const existed_PhoneNumber = yield UserModel_1.default.findOne({
-                        phoneNumber: phoneNumber,
+                        phoneNumber: phoneNumber ? phoneNumber : '0',
                     });
                     if (existed_Email) {
                         if (role) {
@@ -89,7 +89,7 @@ class SettingsController {
                             }));
                             if (user) {
                                 return res.status(200).json({
-                                    status: 'Succes',
+                                    status: 'Success',
                                     message: 'Role Updated successfully',
                                 });
                             }
@@ -103,7 +103,7 @@ class SettingsController {
                         else {
                             res.status(406).json({
                                 status: 'Error',
-                                message: 'Email has already been registered',
+                                message: 'No role Updated',
                             });
                         }
                     }

@@ -275,7 +275,9 @@ class ProductController {
       if (product) {
         return res.status(200).json({
           status: 'Success',
-          message: `${product?.name} active successfully`,
+          message: `${product?.name} ${
+            product?.featureProduct === 'active' ? 'Inactive' : 'Active'
+          } successfully`,
         });
       } else {
         return res.status(404).json({

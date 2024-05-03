@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const cloudinary_1 = __importDefault(require("../../../utils/cloudinary"));
 const MainCategoriesModel_1 = __importDefault(require("../../models/MainCategoriesModel"));
+const ProductModel_1 = require("../../models/ProductModel");
 class AddMainCategoriesController {
     store(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -80,10 +81,21 @@ class AddMainCategoriesController {
             })
                 .skip((parseInt(page) - 1) * brandsPerPage)
                 .limit(brandsPerPage);
+            let productArray = [];
+            for (let i = 0; i < mainCategories.length; i++) {
+                yield ProductModel_1.ProductModel.countDocuments({
+                    category: mainCategories[i].name,
+                }).then((countDocuments) => {
+                    var _a;
+                    const name = (_a = mainCategories[i]) === null || _a === void 0 ? void 0 : _a.name;
+                    productArray.push({ name, total: countDocuments });
+                });
+            }
             if (mainCategories) {
                 return res.status(200).json({
                     status: 'Success',
                     data: mainCategories,
+                    products: productArray,
                     numbers: numberOfMainCategories,
                 });
             }
