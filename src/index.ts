@@ -2,9 +2,6 @@ import methodOverride from 'method-override';
 import express, { Express } from 'express';
 import cors from 'cors';
 import Route from './routes/index';
-import session from 'express-session';
-import passport from 'passport';
-
 import ConnectMongoDB from './config/connectionDB';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
@@ -51,16 +48,6 @@ app.use(express.json({ limit: '50mb' }));
 app.use(methodOverride());
 
 ConnectMongoDB();
-
-app.use(
-  session({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false },
-  }),
-);
-app.use(passport.session());
 
 Route(app);
 
