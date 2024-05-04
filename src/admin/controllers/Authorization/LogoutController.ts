@@ -9,6 +9,7 @@ class LogoutController {
       refreshToken: RefreshToken,
     });
     if (userRefreshToken) {
+      console.log('log out');
       await UserRefreshToken.deleteOne({
         refreshToken: RefreshToken,
       });

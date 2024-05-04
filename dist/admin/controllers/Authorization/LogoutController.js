@@ -22,6 +22,7 @@ class LogoutController {
                 refreshToken: RefreshToken,
             });
             if (userRefreshToken) {
+                console.log('log out');
                 yield UserRefreshTokenModel_1.default.deleteOne({
                     refreshToken: RefreshToken,
                 });
