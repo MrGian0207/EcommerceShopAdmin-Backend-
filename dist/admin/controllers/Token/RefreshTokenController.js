@@ -14,8 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const UserRefreshTokenModel_1 = __importDefault(require("../../models/UserRefreshTokenModel"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
 class RefreshTokenController {
     refreshToken(req, res) {
         return __awaiter(this, void 0, void 0, function* () {

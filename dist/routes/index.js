@@ -17,7 +17,6 @@ const UsersRouter_1 = __importDefault(require("./UsersRouter"));
 const NewletterRouter_1 = __importDefault(require("./NewletterRouter"));
 const SlideRouter_1 = __importDefault(require("./SlideRouter"));
 const SettingsRouter_1 = __importDefault(require("./SettingsRouter"));
-const GoogleRouter_1 = __importDefault(require("./GoogleRouter"));
 function Route(app) {
     app.use('/', RegisterRouter_1.default);
     app.use('/', LoginRouter_1.default);
@@ -33,6 +32,5 @@ function Route(app) {
     app.use('/', NewletterRouter_1.default);
     app.use('/', SlideRouter_1.default);
     app.use('/', SettingsRouter_1.default);
-    app.use('/', GoogleRouter_1.default);
 }
 exports.default = Route;

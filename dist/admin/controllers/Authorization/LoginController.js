@@ -16,8 +16,6 @@ const UserModel_1 = __importDefault(require("../../models/UserModel"));
 const UserRefreshTokenModel_1 = __importDefault(require("../../models/UserRefreshTokenModel"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
 const User = {
     Success: {
         status: 'Success',

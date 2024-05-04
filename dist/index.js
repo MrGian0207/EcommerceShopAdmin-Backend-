@@ -11,10 +11,32 @@ const express_session_1 = __importDefault(require("express-session"));
 const passport_1 = __importDefault(require("passport"));
 const connectionDB_1 = __importDefault(require("./config/connectionDB"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 const app = (0, express_1.default)();
 //Connect to MongoDB
 (0, connectionDB_1.default)();
-app.use((0, cors_1.default)({ credentials: true, origin: 'http://localhost:3000' }));
+app.use((0, cors_1.default)({
+    credentials: true,
+    origin: process.env.REACT_APP_FRONTEND_URL,
+    exposedHeaders: 'content-length',
+    allowedHeaders: [
+        'Content-Type',
+        'Authorization',
+        'Origin',
+        'X-Requested-With',
+        'Accept',
+        'Accept-Encoding',
+        'Accept-Language',
+        'Host',
+        'Referer',
+        'User-Agent',
+        'X-CSRF-Token',
+    ],
+    optionsSuccessStatus: 204,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+}));
 app.use((0, cookie_parser_1.default)());
 //When be submitted by form
 app.use(express_1.default.urlencoded({ extended: false }));

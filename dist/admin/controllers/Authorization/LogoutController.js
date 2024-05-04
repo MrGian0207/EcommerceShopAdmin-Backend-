@@ -13,15 +13,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const UserRefreshTokenModel_1 = __importDefault(require("../../models/UserRefreshTokenModel"));
-const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
 class LogoutController {
     logout(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const RefreshToken = req.cookies.refreshToken;
+            console.log(RefreshToken);
             const userRefreshToken = yield UserRefreshTokenModel_1.default.findOne({
                 refreshToken: RefreshToken,
             });
+            console.log(userRefreshToken);
             if (userRefreshToken) {
                 yield UserRefreshTokenModel_1.default.deleteOne({
                     refreshToken: RefreshToken,

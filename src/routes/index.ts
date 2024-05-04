@@ -12,7 +12,6 @@ import usersRouter from './UsersRouter';
 import newletterRouter from './NewletterRouter';
 import slideRouter from './SlideRouter';
 import settingsRouter from './SettingsRouter';
-import googleRouter from './GoogleRouter';
 
 import { Express } from 'express';
 
@@ -44,7 +43,5 @@ function Route(app: Express) {
   app.use('/', slideRouter);
 
   app.use('/', settingsRouter);
-
-  app.use('/', googleRouter);
 }
 export default Route;
