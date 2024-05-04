@@ -16,7 +16,25 @@ const app: Express = express();
 ConnectMongoDB();
 
 app.use(
-  cors({ credentials: true, origin: process.env.REACT_APP_FRONTEND_URL }),
+  cors({
+    credentials: true,
+    origin: process.env.REACT_APP_FRONTEND_URL,
+    exposedHeaders: 'content-length',
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'Origin',
+      'X-Requested-With',
+      'Accept',
+      'Accept-Encoding',
+      'Accept-Language',
+      'Host',
+      'Referer',
+      'User-Agent',
+      'X-CSRF-Token',
+    ],
+    optionsSuccessStatus: 204,
+  }),
 );
 
 app.use(cookieParser());
