@@ -34,6 +34,8 @@ app.use(
       'X-CSRF-Token',
     ],
     optionsSuccessStatus: 204,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
   }),
 );
 
