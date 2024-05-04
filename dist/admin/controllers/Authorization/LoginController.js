@@ -64,7 +64,7 @@ class LoginController {
                         httpOnly: true,
                         secure: true,
                         path: '/',
-                        sameSite: 'strict',
+                        sameSite: 'none',
                         expires: currentDate,
                     });
                     res.status(200).json({
