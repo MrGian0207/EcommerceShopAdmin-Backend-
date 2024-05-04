@@ -8,12 +8,11 @@ class LogoutController {
     const userRefreshToken = await UserRefreshToken.findOne({
       refreshToken: RefreshToken,
     });
-    console.log(userRefreshToken);
     if (userRefreshToken) {
       await UserRefreshToken.deleteOne({
         refreshToken: RefreshToken,
       });
-      res.clearCookie('refreshToken', { httpOnly: true });
+      res.clearCookie('refreshToken', { httpOnly: true, secure: true });
       res
         .status(200)
         .json({ status: 'Success', message: 'Logout successfully' });

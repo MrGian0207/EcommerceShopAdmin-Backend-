@@ -69,7 +69,7 @@ class LoginController {
 
         res.cookie('refreshToken', refreshToken, {
           httpOnly: true,
-          secure: false,
+          secure: true,
           path: '/',
           sameSite: 'strict',
           expires: currentDate,

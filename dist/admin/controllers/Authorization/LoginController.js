@@ -62,7 +62,7 @@ class LoginController {
                     yield newUserRefreshToken.save();
                     res.cookie('refreshToken', refreshToken, {
                         httpOnly: true,
-                        secure: false,
+                        secure: true,
                         path: '/',
                         sameSite: 'strict',
                         expires: currentDate,
