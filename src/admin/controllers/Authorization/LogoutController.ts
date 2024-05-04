@@ -13,7 +13,12 @@ class LogoutController {
       await UserRefreshToken.deleteOne({
         refreshToken: RefreshToken,
       });
-      res.clearCookie('refreshToken', { httpOnly: true, secure: true });
+      res.clearCookie('refreshToken', {
+        httpOnly: true,
+        secure: true,
+        path: '/',
+        sameSite: 'none',
+      });
       res
         .status(200)
         .json({ status: 'Success', message: 'Logout successfully' });
