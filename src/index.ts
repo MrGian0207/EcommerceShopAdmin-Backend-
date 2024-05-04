@@ -7,13 +7,17 @@ import passport from 'passport';
 
 import ConnectMongoDB from './config/connectionDB';
 import cookieParser from 'cookie-parser';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app: Express = express();
 
 //Connect to MongoDB
 ConnectMongoDB();
 
-app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+app.use(
+  cors({ credentials: true, origin: process.env.REACT_APP_FRONTEND_URL }),
+);
 
 app.use(cookieParser());
 

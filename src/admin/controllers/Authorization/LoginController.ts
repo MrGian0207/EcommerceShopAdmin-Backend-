@@ -3,9 +3,6 @@ import UserModel from '../../models/UserModel';
 import UserRefreshTokenModel from '../../models/UserRefreshTokenModel';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 const User = {
   Success: {
@@ -37,7 +34,7 @@ class LoginController {
         expiresIn: '2592000s',
       },
     );
-    
+
     const refreshToken = jwt.sign(
       data,
       process.env.REFRESH_TOKEN_SECRET_KEY as string,

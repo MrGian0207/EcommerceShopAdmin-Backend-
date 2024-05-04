@@ -1,8 +1,5 @@
 import { Request, Response } from 'express';
 import UserRefreshToken from '../../models/UserRefreshTokenModel';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 class LogoutController {
   async logout(req: Request, res: Response) {
