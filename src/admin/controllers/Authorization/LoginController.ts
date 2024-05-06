@@ -89,8 +89,9 @@ class LoginController {
   }
 
   index(req: Request, res: Response) {
-    const RefreshToken = req.cookies.refreshToken;
-    res.send(RefreshToken);
+    res.status(200).json({
+      status: 'Success',
+    });
   }
 }
 
