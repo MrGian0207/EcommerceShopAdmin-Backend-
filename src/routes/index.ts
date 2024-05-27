@@ -12,6 +12,7 @@ import usersRouter from './UsersRouter';
 import newletterRouter from './NewletterRouter';
 import slideRouter from './SlideRouter';
 import settingsRouter from './SettingsRouter';
+import forgotPasswordRouter from './ForgotPasswordRouter';
 
 import { Express } from 'express';
 
@@ -19,6 +20,8 @@ function Route(app: Express) {
   app.use('/', registerRouter);
 
   app.use('/', loginRouter);
+
+  app.use('/', forgotPasswordRouter);
 
   app.use('/', dashboardRouter);
 

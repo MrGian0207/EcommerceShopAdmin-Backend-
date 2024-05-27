@@ -1,4 +1,3 @@
-import { log } from 'console';
 import LoginController from '../admin/controllers/Authorization/LoginController';
 import { Router } from 'express';
 

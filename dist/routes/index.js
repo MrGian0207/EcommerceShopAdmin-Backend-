@@ -17,9 +17,11 @@ const UsersRouter_1 = __importDefault(require("./UsersRouter"));
 const NewletterRouter_1 = __importDefault(require("./NewletterRouter"));
 const SlideRouter_1 = __importDefault(require("./SlideRouter"));
 const SettingsRouter_1 = __importDefault(require("./SettingsRouter"));
+const ForgotPasswordRouter_1 = __importDefault(require("./ForgotPasswordRouter"));
 function Route(app) {
     app.use('/', RegisterRouter_1.default);
     app.use('/', LoginRouter_1.default);
+    app.use('/', ForgotPasswordRouter_1.default);
     app.use('/', DashboardRouter_1.default);
     app.use('/', RefreshTokenRouter_1.default);
     app.use('/', LogoutRouter_1.default);

@@ -83,8 +83,9 @@ class LoginController {
         });
     }
     index(req, res) {
-        const RefreshToken = req.cookies.refreshToken;
-        res.send(RefreshToken);
+        res.status(200).json({
+            status: 'Success',
+        });
     }
 }
 exports.default = LoginController;

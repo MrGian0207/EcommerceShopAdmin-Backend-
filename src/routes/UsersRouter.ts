@@ -6,7 +6,7 @@ import authenToken from '../middlewares/authenToken';
 const usersController = new UsersController();
 const usersRouter = Router();
 
-usersRouter.get('/users',usersController.getAll);
+usersRouter.get('/users', authenToken, usersController.getAll);
 usersRouter.get('/users/:id', authenToken, usersController.getOne);
 usersRouter.put(
   '/users',
