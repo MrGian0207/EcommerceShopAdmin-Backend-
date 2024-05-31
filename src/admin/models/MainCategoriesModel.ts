@@ -1,29 +1,22 @@
 import mongoose, { Schema } from 'mongoose';
-
-interface MainCategories {
-  name?: string;
-  title?: string;
-  slug?: string;
-  description?: string;
-  image?: string;
-}
+import { MainCategories } from '../../types/MainCategoriesType';
 
 const MainCategoriesSchema = new Schema<MainCategories>(
-  {
-    name: { type: String, required: true },
-    title: { type: String, required: true },
-    slug: { type: String, required: true },
-    description: { type: String, required: true },
-    image: { type: String, required: true },
-  },
-  {
-    timestamps: true,
-  },
+   {
+      name: { type: String, required: true },
+      title: { type: String, required: true },
+      slug: { type: String, required: true },
+      description: { type: String, required: true },
+      image: { type: String, required: true },
+   },
+   {
+      timestamps: true,
+   },
 );
 
 const MainCategoriesModel = mongoose.model<MainCategories>(
-  'MainCategories',
-  MainCategoriesSchema,
+   'MainCategories',
+   MainCategoriesSchema,
 );
 
 export default MainCategoriesModel;

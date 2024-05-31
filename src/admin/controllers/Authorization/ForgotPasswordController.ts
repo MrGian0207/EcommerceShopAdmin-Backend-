@@ -2,18 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import UserModel from '../../models/UserModel';
 import bcrypt from 'bcrypt';
 import sendEmail from '../../../services/email';
-
-interface User {
-   fullName?: string;
-   gender?: string;
-   phoneNumber?: number;
-   emailAddress?: string;
-   password?: string;
-   status?: string;
-   role?: string;
-   about?: string;
-   image?: string;
-}
+import { User } from '../../../types/UserType';
 
 const saltRounds = 10;
 function generateRandomString(length: number = 12) {

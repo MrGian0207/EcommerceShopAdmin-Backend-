@@ -280,7 +280,8 @@ class ProductController {
                 // Xử lý get idVariantArray và idVariantDeletedArray
                 let idArray = [];
                 let idDeletedArray = [];
-                if (typeof idVariantArray === 'string' && idVariantArray !== undefined) {
+                if (typeof idVariantArray === 'string' &&
+                    idVariantArray !== undefined) {
                     idArray = [idVariantArray];
                 }
                 else {
@@ -353,7 +354,8 @@ class ProductController {
                                         _id: idArray[index],
                                     });
                                     if (variantUpdated) {
-                                        uploadedImage = variantUpdated.variantImagesFile;
+                                        uploadedImage =
+                                            variantUpdated.variantImagesFile;
                                     }
                                     const variant = yield ProductModel_1.VariantModel.findOneAndUpdate({
                                         _id: idArray[index],
