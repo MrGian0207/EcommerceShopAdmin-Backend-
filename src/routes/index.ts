@@ -1,3 +1,4 @@
+import { Router, Express } from 'express';
 import registerRouter from './RegisterRouter';
 import loginRouter from './LoginRouter';
 import dashboardRouter from './DashboardRouter';
@@ -14,37 +15,46 @@ import slideRouter from './SlideRouter';
 import settingsRouter from './SettingsRouter';
 import forgotPasswordRouter from './ForgotPasswordRouter';
 
-import { Express } from 'express';
+const indexRouter = Router();
+indexRouter.get('/', (req, res) => {
+   res.json({
+      message: 'This is the Ecommerce shop backend',
+   });
+});
 
+// ROUTE
 function Route(app: Express) {
-  app.use('/', registerRouter);
+   app.use('/', indexRouter);
 
-  app.use('/', loginRouter);
+   app.use('/', registerRouter);
 
-  app.use('/', forgotPasswordRouter);
+   app.use('/', loginRouter);
 
-  app.use('/', dashboardRouter);
+   app.use('/', forgotPasswordRouter);
 
-  app.use('/', refreshTokenRouter);
+   app.use('/', dashboardRouter);
 
-  app.use('/', logoutRouter);
+   app.use('/', refreshTokenRouter);
 
-  app.use('/', mainCategoriesRouter);
+   app.use('/', logoutRouter);
 
-  app.use('/', subCategoriesRouter);
+   app.use('/', mainCategoriesRouter);
 
-  app.use('/', brandsRouter);
+   app.use('/', subCategoriesRouter);
 
-  app.use('/', productRouter);
+   app.use('/', brandsRouter);
 
-  app.use('/', ordersRouter);
+   app.use('/', productRouter);
 
-  app.use('/', usersRouter);
+   app.use('/', ordersRouter);
 
-  app.use('/', newletterRouter);
+   app.use('/', usersRouter);
 
-  app.use('/', slideRouter);
+   app.use('/', newletterRouter);
 
-  app.use('/', settingsRouter);
+   app.use('/', slideRouter);
+
+   app.use('/', settingsRouter);
 }
+
 export default Route;

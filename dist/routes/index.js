@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
 const RegisterRouter_1 = __importDefault(require("./RegisterRouter"));
 const LoginRouter_1 = __importDefault(require("./LoginRouter"));
 const DashboardRouter_1 = __importDefault(require("./DashboardRouter"));
@@ -18,7 +19,15 @@ const NewletterRouter_1 = __importDefault(require("./NewletterRouter"));
 const SlideRouter_1 = __importDefault(require("./SlideRouter"));
 const SettingsRouter_1 = __importDefault(require("./SettingsRouter"));
 const ForgotPasswordRouter_1 = __importDefault(require("./ForgotPasswordRouter"));
+const indexRouter = (0, express_1.Router)();
+indexRouter.get('/', (req, res) => {
+    res.json({
+        message: 'This is the Ecommerce shop backend',
+    });
+});
+// ROUTE
 function Route(app) {
+    app.use('/', indexRouter);
     app.use('/', RegisterRouter_1.default);
     app.use('/', LoginRouter_1.default);
     app.use('/', ForgotPasswordRouter_1.default);
