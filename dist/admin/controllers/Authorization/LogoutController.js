@@ -17,7 +17,6 @@ class LogoutController {
     logout(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const RefreshToken = req.cookies.refreshToken;
-            console.log(RefreshToken);
             const userRefreshToken = yield UserRefreshTokenModel_1.default.findOne({
                 refreshToken: RefreshToken,
             });

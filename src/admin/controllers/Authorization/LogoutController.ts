@@ -4,7 +4,6 @@ import UserRefreshToken from '../../models/UserRefreshTokenModel';
 class LogoutController {
   async logout(req: Request, res: Response) {
     const RefreshToken = req.cookies.refreshToken;
-    console.log(RefreshToken);
     const userRefreshToken = await UserRefreshToken.findOne({
       refreshToken: RefreshToken,
     });

@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const UserRefreshTokenModel_1 = __importDefault(require("../../models/UserRefreshTokenModel"));
+const UserModel_1 = __importDefault(require("../../models/UserModel"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 class RefreshTokenController {
     refreshToken(req, res) {
@@ -21,6 +22,9 @@ class RefreshTokenController {
             const userRefreshToken = yield UserRefreshTokenModel_1.default.findOne({
                 refreshToken: RefreshToken,
             });
+            const userRole = yield UserModel_1.default.findById(userRefreshToken === null || userRefreshToken === void 0 ? void 0 : userRefreshToken.userId)
+                .select('role')
+                .exec();
             try {
                 if (!userRefreshToken) {
                     res.status(401).json({
@@ -31,6 +35,7 @@ class RefreshTokenController {
                 else {
                     const accessToken = jsonwebtoken_1.default.sign({
                         id: userRefreshToken.userId,
+                        role: userRole ? userRole : '',
                     }, process.env.ACCESS_TOKEN_SECRET_KEY, {
                         expiresIn: '2592000s',
                     });

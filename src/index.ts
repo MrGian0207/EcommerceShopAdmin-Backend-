@@ -13,27 +13,30 @@ const app: Express = express();
 ConnectMongoDB();
 
 app.use(
-  cors({
-    credentials: true,
-    origin: process.env.REACT_APP_FRONTEND_URL,
-    exposedHeaders: 'content-length',
-    allowedHeaders: [
-      'Content-Type',
-      'Authorization',
-      'Origin',
-      'X-Requested-With',
-      'Accept',
-      'Accept-Encoding',
-      'Accept-Language',
-      'Host',
-      'Referer',
-      'User-Agent',
-      'X-CSRF-Token',
-    ],
-    optionsSuccessStatus: 204,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    preflightContinue: false,
-  }),
+   cors({
+      credentials: true,
+      origin: [
+         `${process.env.REACT_APP_FRONTEND_URL}`,
+         `${process.env.REACT_APP_FRONTEND_URL_DEV}`,
+      ],
+      exposedHeaders: 'content-length',
+      allowedHeaders: [
+         'Content-Type',
+         'Authorization',
+         'Origin',
+         'X-Requested-With',
+         'Accept',
+         'Accept-Encoding',
+         'Accept-Language',
+         'Host',
+         'Referer',
+         'User-Agent',
+         'X-CSRF-Token',
+      ],
+      optionsSuccessStatus: 204,
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+      preflightContinue: false,
+   }),
 );
 
 app.use(cookieParser());
@@ -52,5 +55,5 @@ ConnectMongoDB();
 Route(app);
 
 app.listen(8000, () => {
-  console.log('Example app listening on port 8000!');
+   console.log('Example app listening on port 8000!');
 });
