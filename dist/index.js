@@ -16,7 +16,10 @@ const app = (0, express_1.default)();
 (0, connectionDB_1.default)();
 app.use((0, cors_1.default)({
     credentials: true,
-    origin: process.env.REACT_APP_FRONTEND_URL,
+    origin: [
+        `${process.env.REACT_APP_FRONTEND_URL}`,
+        `${process.env.REACT_APP_FRONTEND_URL_DEV}`,
+    ],
     exposedHeaders: 'content-length',
     allowedHeaders: [
         'Content-Type',
