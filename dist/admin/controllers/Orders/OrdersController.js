@@ -17,7 +17,6 @@ const ProductModel_1 = require("../../models/ProductModel");
 class OrdersController {
     store(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
             const { customerName, customerPhone, customerEmail, customerAddress, methodDelivery, statusDelivery, shippingFee, colorProducts, quantityProducts, sizeProducts, priceProducts, subtotal, total, products, } = req.body;
             const requiredFields = [
                 customerName,
@@ -53,9 +52,9 @@ class OrdersController {
                     methodDelivery: methodDelivery,
                     statusDelivery: statusDelivery,
                     shippingFee: shippingFee,
-                    imageDefault: variant[0]
-                        ? (_a = variant[0].variantImagesFile) === null || _a === void 0 ? void 0 : _a[0]
-                        : '',
+                    // imageDefault: variant[0]
+                    //    ? (variant[0] as Variant).variantImagesFile?.[0]
+                    //    : '',
                     colorProducts: colorProducts,
                     quantityProducts: quantityProducts,
                     sizeProducts: sizeProducts,

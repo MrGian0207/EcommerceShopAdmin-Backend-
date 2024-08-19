@@ -249,7 +249,12 @@ class AddMainCategoriesController {
             if (nameMainCategories) {
                 return res.status(200).json({
                     status: 'Success',
-                    data: nameMainCategories,
+                    data: nameMainCategories.map((name) => {
+                        return {
+                            value: name,
+                            label: name,
+                        };
+                    }),
                 });
             }
             else {

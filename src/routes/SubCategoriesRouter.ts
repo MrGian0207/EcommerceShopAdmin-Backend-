@@ -7,41 +7,41 @@ const subCategoriesController = new SubCategoriesController();
 const subCategoriesRouter = Router();
 
 subCategoriesRouter.post(
-  '/categories/sub-categories/add',
-  authenToken,
-  upload.single('sub-category-image'),
-  subCategoriesController.store,
+   '/categories/sub-categories/add',
+   authenToken,
+   upload.single('image'),
+   subCategoriesController.store,
 );
 
 subCategoriesRouter.get(
-  '/categories/sub-categories',
-  authenToken,
-  subCategoriesController.getAll,
+   '/categories/sub-categories',
+   authenToken,
+   subCategoriesController.getAll,
 );
 
 subCategoriesRouter.get(
-  '/categories/sub-categories/name',
-  authenToken,
-  subCategoriesController.subCategories,
+   '/categories/sub-categories/name',
+   authenToken,
+   subCategoriesController.subCategories,
 );
 
 subCategoriesRouter.get(
-  '/categories/sub-categories/:id',
-  authenToken,
-  subCategoriesController.getOne,
+   '/categories/sub-categories/:id',
+   authenToken,
+   subCategoriesController.getOne,
 );
 
 subCategoriesRouter.post(
-  '/categories/sub-categories/:id',
-  authenToken,
-  upload.single('sub-category-image'),
-  subCategoriesController.update,
+   '/categories/sub-categories/:id',
+   authenToken,
+   upload.single('image'),
+   subCategoriesController.update,
 );
 
 subCategoriesRouter.delete(
-  '/categories/sub-categories/delete/:id',
-  authenToken,
-  subCategoriesController.deleteOne,
+   '/categories/sub-categories/delete/:id',
+   authenToken,
+   subCategoriesController.deleteOne,
 );
 
 export default subCategoriesRouter;

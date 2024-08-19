@@ -59,9 +59,9 @@ class OrdersController {
             methodDelivery: methodDelivery,
             statusDelivery: statusDelivery,
             shippingFee: shippingFee,
-            imageDefault: variant[0]
-               ? (variant[0] as Variant).variantImagesFile?.[0]
-               : '',
+            // imageDefault: variant[0]
+            //    ? (variant[0] as Variant).variantImagesFile?.[0]
+            //    : '',
             colorProducts: colorProducts,
             quantityProducts: quantityProducts,
             sizeProducts: sizeProducts,

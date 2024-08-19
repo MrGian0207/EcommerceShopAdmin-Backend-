@@ -20,6 +20,8 @@ class SubCategoriesController {
             try {
                 const { name, title, slug, description, category } = req.body;
                 const image = req.file;
+                console.log(req.body);
+                console.log(image);
                 // Kiểm tra các trường bắt buộc
                 if (!name || !title || !slug || !description || !category || !image) {
                     return res.status(400).json({
@@ -240,7 +242,12 @@ class SubCategoriesController {
             if (nameSubCategories) {
                 return res.status(200).json({
                     status: 'Success',
-                    data: nameSubCategories,
+                    data: nameSubCategories.map((name) => {
+                        return {
+                            value: name,
+                            label: name,
+                        };
+                    }),
                 });
             }
             else {

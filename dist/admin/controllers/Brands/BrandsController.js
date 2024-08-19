@@ -20,6 +20,7 @@ class BrandsController {
             try {
                 const { name, title, slug, description } = req.body;
                 const image = req.file;
+                console.log(req.body, image);
                 // Kiểm tra các trường bắt buộc
                 if (!name || !title || !slug || !description || !image) {
                     return res.status(400).json({
@@ -188,7 +189,8 @@ class BrandsController {
     deleteOne(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { id } = req.body;
+                const { id } = req.params;
+                console.log(id);
                 if (!id) {
                     return res.status(400).json({
                         status: 'Error',
@@ -240,7 +242,12 @@ class BrandsController {
             if (nameBrands) {
                 return res.status(200).json({
                     status: 'Success',
-                    data: nameBrands,
+                    data: nameBrands.map((name) => {
+                        return {
+                            value: name,
+                            label: name,
+                        };
+                    }),
                 });
             }
             else {

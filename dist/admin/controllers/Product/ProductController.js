@@ -17,10 +17,12 @@ const cloudinary_1 = __importDefault(require("../../../utils/cloudinary"));
 class ProductController {
     store(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
             try {
-                const { name, title, slug, description, category, subCategory, brand, gender, status, productCode, tag, featureProduct, defaultVariant, variantName, variantSize, variantColor, variantProductSKU, variantQuantity, variantRegularPrice, variantSalePrice, variantNumberImagesOfVariants, } = req.body;
+                const payload = JSON.parse(req.body.payload);
+                const { name, title, slug, description, category, subCategory, brand, gender, status, productCode, tags, featureProduct, defaultVariant, variants, } = payload;
                 const variantImages = req.files;
+                console.log(payload);
+                console.log(variantImages);
                 // Kiểm tra các trường bắt buộc
                 const requiredFields = [
                     name,
@@ -33,17 +35,10 @@ class ProductController {
                     gender,
                     status,
                     productCode,
-                    tag,
+                    tags,
                     featureProduct,
                     defaultVariant,
-                    variantName,
-                    variantSize,
-                    variantColor,
-                    variantProductSKU,
-                    variantQuantity,
-                    variantRegularPrice,
-                    variantSalePrice,
-                    variantNumberImagesOfVariants,
+                    variants,
                 ];
                 if (requiredFields.some((field) => !field)) {
                     return res.status(400).json({
@@ -51,17 +46,6 @@ class ProductController {
                         message: 'Missing required fields',
                     });
                 }
-                let VariantName = [];
-                if (typeof variantName === 'string') {
-                    VariantName = [variantName];
-                }
-                else {
-                    VariantName = variantName;
-                }
-                const variantNumberImagesOfVariantArray = variantNumberImagesOfVariants
-                    .trim()
-                    .split(' ')
-                    .map((numberImages) => Number.parseInt(numberImages));
                 const product = new ProductModel_1.ProductModel({
                     name,
                     title,
@@ -73,62 +57,44 @@ class ProductController {
                     gender,
                     status,
                     productCode,
-                    tag,
+                    tags,
                     featureProduct,
                     defaultVariant,
                 });
                 yield product.save();
-                if (variantName) {
-                    for (let index = 0; index < VariantName.length; index++) {
-                        try {
-                            let imagesFileVariant = [];
-                            for (let i = 0; i < variantNumberImagesOfVariantArray[index]; i++) {
-                                if (variantImages && Array.isArray(variantImages)) {
-                                    const imageUrl = yield cloudinary_1.default.uploader.upload((_a = variantImages[0]) === null || _a === void 0 ? void 0 : _a.path, {
-                                        folder: 'variant',
-                                    });
-                                    imagesFileVariant.push(imageUrl.secure_url);
-                                    variantImages === null || variantImages === void 0 ? void 0 : variantImages.splice(0, 1);
-                                }
-                            }
-                            const variant = new ProductModel_1.VariantModel({
-                                variantName: typeof variantName[index] === 'string'
-                                    ? variantName
-                                    : variantName[index],
-                                variantSize: typeof variantSize[index] === 'number'
-                                    ? variantSize
-                                    : variantSize[index],
-                                variantColor: typeof variantColor[index] === 'string'
-                                    ? variantColor
-                                    : variantColor[index],
-                                variantProductSKU: typeof variantProductSKU[index] === 'string'
-                                    ? variantProductSKU
-                                    : variantProductSKU[index],
-                                variantQuantity: typeof variantQuantity[index] === 'string'
-                                    ? variantQuantity
-                                    : variantQuantity[index],
-                                variantRegularPrice: typeof variantRegularPrice[index] === 'string'
-                                    ? variantRegularPrice
-                                    : variantRegularPrice[index],
-                                variantSalePrice: typeof variantSalePrice[index] === 'string'
-                                    ? variantSalePrice
-                                    : variantSalePrice[index],
-                                variantImagesFile: (imagesFileVariant === null || imagesFileVariant === void 0 ? void 0 : imagesFileVariant.length) > 0 ? imagesFileVariant : [],
-                                product: product._id,
-                            });
-                            yield variant.save();
-                            yield product.updateOne({
-                                $push: { variants: variant._id },
-                            });
+                const variantPromises = variants.map((variant, index) => __awaiter(this, void 0, void 0, function* () {
+                    try {
+                        let images = [];
+                        if (Array.isArray(variantImages)) {
+                            images = variantImages.slice(0, variant.numberOfImages);
+                            variantImages.splice(0, variant.numberOfImages);
                         }
-                        catch (error) {
-                            return res.status(500).json({
-                                status: 'Error',
-                                message: 'Error processing variant',
-                            });
-                        }
+                        const uploadPromises = images.map((image) => cloudinary_1.default.uploader.upload(image.path, {
+                            folder: 'variant',
+                        }));
+                        const uploadedImages = yield Promise.all(uploadPromises);
+                        const newVariant = new ProductModel_1.VariantModel({
+                            variantName: variant.variantName,
+                            variantSize: variant.variantSize,
+                            variantColor: variant.variantColor,
+                            variantProductSKU: variant.variantProductSKU,
+                            variantQuantity: variant.variantQuantity,
+                            variantRegularPrice: variant.variantRegularPrice,
+                            variantSalePrice: variant.variantSalePrice,
+                            variantImages: uploadedImages.map((img) => img.secure_url),
+                            product: product._id,
+                        });
+                        yield newVariant.save();
+                        yield product.updateOne({
+                            $push: { variants: newVariant._id },
+                        });
                     }
-                }
+                    catch (err) {
+                        console.error('Error processing variant:', err);
+                        throw err;
+                    }
+                }));
+                yield Promise.all(variantPromises);
                 return res.json({
                     status: 'Success',
                     message: 'Save Product Successfully !!',
@@ -254,7 +220,7 @@ class ProductController {
             var _a, _b;
             try {
                 const { id } = req.params;
-                let { name, title, slug, description, category, subCategory, brand, gender, status, productCode, tag, featureProduct, defaultVariant, variantName, variantSize, variantColor, variantProductSKU, variantQuantity, variantRegularPrice, variantSalePrice, variantNumberImagesOfVariants, idVariantArray, idVariantDeletedArray, } = req.body;
+                let { name, title, slug, description, category, subCategory, brand, gender, status, productCode, tags, featureProduct, defaultVariant, variantName, variantSize, variantColor, variantProductSKU, variantQuantity, variantRegularPrice, variantSalePrice, variantNumberImagesOfVariants, idVariantArray, idVariantDeletedArray, } = req.body;
                 const variantImages = req.files;
                 // Kiểm tra các trường bắt buộc
                 const requiredFields = [
@@ -268,7 +234,7 @@ class ProductController {
                     gender,
                     status,
                     productCode,
-                    tag,
+                    tags,
                     featureProduct,
                 ];
                 if (requiredFields.some((field) => !field)) {
@@ -312,7 +278,7 @@ class ProductController {
                     gender,
                     status,
                     productCode,
-                    tag,
+                    tags,
                     featureProduct,
                     defaultVariant,
                 });
@@ -355,7 +321,7 @@ class ProductController {
                                     });
                                     if (variantUpdated) {
                                         uploadedImage =
-                                            variantUpdated.variantImagesFile;
+                                            variantUpdated.variantImages;
                                     }
                                     const variant = yield ProductModel_1.VariantModel.findOneAndUpdate({
                                         _id: idArray[index],
@@ -512,7 +478,7 @@ class ProductController {
                     for (let index = 0; index < variants.length; index++) {
                         // Lấy tất cả các ảnh trong variant
                         const deletedImageArray = variants[index]
-                            .variantImagesFile;
+                            .variantImages;
                         // Xóa hết tất cả các ảnh đó ở trên Cloudinary
                         for (let i = 0; i < (deletedImageArray === null || deletedImageArray === void 0 ? void 0 : deletedImageArray.length); i++) {
                             const deletedImage = deletedImageArray[i];
