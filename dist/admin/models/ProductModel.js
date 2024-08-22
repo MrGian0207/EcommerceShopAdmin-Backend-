@@ -55,7 +55,7 @@ const VariantSchema = new mongoose_1.Schema({
     variantSize: { type: String, required: true },
     variantColor: { type: String, required: true },
     variantProductSKU: { type: String, required: true },
-    variantQuantity: { type: String, required: true },
+    variantQuantity: { type: Number, required: true },
     variantRegularPrice: { type: String, required: true },
     variantSalePrice: { type: String, required: true },
     variantImages: { type: [String] },

@@ -12,8 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const ProductModel_1 = require("../../models/ProductModel");
 const cloudinary_1 = __importDefault(require("../../../utils/cloudinary"));
+const ProductModel_1 = require("../../models/ProductModel");
 class ProductController {
     store(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -109,87 +109,66 @@ class ProductController {
         });
     }
     getAll(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            var _a, _b, _c;
-            try {
-                const page = ((_a = req.query) === null || _a === void 0 ? void 0 : _a.page)
-                    ? (_b = req.query) === null || _b === void 0 ? void 0 : _b.page
-                    : '1';
-                const search = (_c = req.query) === null || _c === void 0 ? void 0 : _c.search;
-                const brandsPerPage = 10;
-                let numberOfProducts = 0;
-                yield ProductModel_1.ProductModel.countDocuments({}).then((countDocuments) => {
-                    numberOfProducts = Math.ceil(countDocuments / brandsPerPage);
+        var _a, _b, _c;
+        try {
+            const page = ((_a = req.query) === null || _a === void 0 ? void 0 : _a.page) ? (_b = req.query) === null || _b === void 0 ? void 0 : _b.page : '1';
+            const search = (_c = req.query) === null || _c === void 0 ? void 0 : _c.search;
+            const brandsPerPage = 10;
+            let numberOfProducts = 0;
+            ProductModel_1.ProductModel.countDocuments({}).then((countDocuments) => {
+                numberOfProducts = Math.ceil(countDocuments / brandsPerPage);
+            });
+            ProductModel_1.ProductModel.find({
+                name: { $regex: search, $options: 'i' },
+            })
+                .populate('variants')
+                .skip((parseInt(page) - 1) * brandsPerPage)
+                .limit(brandsPerPage)
+                .then((products) => {
+                const data = products.map((product) => {
+                    var _a, _b, _c;
+                    const productObject = product.toObject();
+                    const variantDefault = (_a = productObject.variants) === null || _a === void 0 ? void 0 : _a.find((variant) => variant.variantName === productObject.defaultVariant);
+                    const totalProducts = (_b = productObject.variants) === null || _b === void 0 ? void 0 : _b.reduce((total, variant) => (total + variant.variantQuantity) | 0, 0);
+                    return Object.assign(Object.assign({}, productObject), { image: (_c = variantDefault === null || variantDefault === void 0 ? void 0 : variantDefault.variantImages) === null || _c === void 0 ? void 0 : _c[0], priceDefault: variantDefault === null || variantDefault === void 0 ? void 0 : variantDefault.variantRegularPrice, totalProducts });
                 });
-                const products = yield ProductModel_1.ProductModel.find({
-                    name: { $regex: search, $options: 'i' },
-                })
-                    .skip((parseInt(page) - 1) * brandsPerPage)
-                    .limit(brandsPerPage);
-                let variants = [];
-                let quantity = [];
-                yield Promise.all(products.map((product, index) => __awaiter(this, void 0, void 0, function* () {
-                    const variantDefault = (yield ProductModel_1.VariantModel.findOne({
-                        variantName: product.defaultVariant,
-                    }));
-                    if (variants) {
-                        variants[index] = variantDefault;
-                    }
-                    const variantArray = yield ProductModel_1.VariantModel.find({
-                        product: product._id,
-                    });
-                    if (quantity && variantArray.length > 0) {
-                        const totalQuantity = variantArray.reduce((acc, variant) => acc + parseInt(variant.variantQuantity || '0'), 0);
-                        quantity[index] = totalQuantity;
-                    }
-                })));
-                if (products.length > 0) {
-                    return res.status(200).json({
-                        status: 'Success',
-                        data: products,
-                        numbers: numberOfProducts,
-                        variants: variants,
-                        quantity: quantity,
-                    });
-                }
-                else {
-                    return res.status(404).json({
-                        status: 'Error',
-                        message: 'Products not found',
-                    });
-                }
-            }
-            catch (error) {
+                return res.status(200).json({ data: data, numbers: numberOfProducts });
+            })
+                .catch((err) => {
                 return res.status(500).json({
                     status: 'Error',
-                    message: 'Error fetching products',
+                    message: err.message,
                 });
-            }
-        });
+            });
+        }
+        catch (error) {
+            return res.status(500).json({
+                status: 'Error',
+                message: 'Error fetching products',
+            });
+        }
     }
     activeProducts(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                console.log(req.body);
                 const update = req.body;
-                const product = yield ProductModel_1.ProductModel.findByIdAndUpdate(update._id, {
-                    featureProduct: update.feature,
+                const product = yield ProductModel_1.ProductModel.findByIdAndUpdate(update.id, {
+                    featureProduct: update.featureState,
                 });
                 if (product) {
                     return res.status(200).json({
-                        status: 'Success',
-                        message: `${product === null || product === void 0 ? void 0 : product.name} ${(product === null || product === void 0 ? void 0 : product.featureProduct) === 'active' ? 'Inactive' : 'Active'} successfully`,
+                        message: 'Featured Product State updated successfully',
                     });
                 }
                 else {
                     return res.status(404).json({
-                        status: 'Error',
                         message: 'Product not found',
                     });
                 }
             }
             catch (error) {
                 return res.status(500).json({
-                    status: 'Error',
                     message: 'Error activating product',
                 });
             }
@@ -201,10 +180,8 @@ class ProductController {
                 const { id } = req.params;
                 const product = yield ProductModel_1.ProductModel.findById(id).populate('variants');
                 if (product) {
-                    return res.status(200).json({
-                        status: 'Success',
-                        data: product,
-                    });
+                    console.log(product);
+                    return res.status(200).json(product);
                 }
             }
             catch (error) {
@@ -246,8 +223,7 @@ class ProductController {
                 // Xử lý get idVariantArray và idVariantDeletedArray
                 let idArray = [];
                 let idDeletedArray = [];
-                if (typeof idVariantArray === 'string' &&
-                    idVariantArray !== undefined) {
+                if (typeof idVariantArray === 'string' && idVariantArray !== undefined) {
                     idArray = [idVariantArray];
                 }
                 else {
@@ -260,8 +236,7 @@ class ProductController {
                 else {
                     VariantName = variantName;
                 }
-                if (typeof idVariantDeletedArray === 'string' &&
-                    idVariantDeletedArray !== undefined) {
+                if (typeof idVariantDeletedArray === 'string' && idVariantDeletedArray !== undefined) {
                     idDeletedArray = [idVariantDeletedArray];
                 }
                 else {
@@ -320,19 +295,14 @@ class ProductController {
                                         _id: idArray[index],
                                     });
                                     if (variantUpdated) {
-                                        uploadedImage =
-                                            variantUpdated.variantImages;
+                                        uploadedImage = variantUpdated.variantImages;
                                     }
                                     const variant = yield ProductModel_1.VariantModel.findOneAndUpdate({
                                         _id: idArray[index],
                                     }, {
                                         variantName: VariantName[index],
-                                        variantSize: typeof variantSize === 'string'
-                                            ? variantSize
-                                            : variantSize[index],
-                                        variantColor: typeof variantColor === 'string'
-                                            ? variantColor
-                                            : variantColor[index],
+                                        variantSize: typeof variantSize === 'string' ? variantSize : variantSize[index],
+                                        variantColor: typeof variantColor === 'string' ? variantColor : variantColor[index],
                                         variantProductSKU: typeof variantProductSKU === 'string'
                                             ? variantProductSKU
                                             : variantProductSKU[index],
@@ -361,18 +331,12 @@ class ProductController {
                                     // Tạo variant mới được thêm vào từ phía client
                                     const variant = new ProductModel_1.VariantModel({
                                         variantName: VariantName[index],
-                                        variantSize: typeof variantSize === 'string'
-                                            ? variantSize
-                                            : variantSize[index],
-                                        variantColor: typeof variantColor === 'string'
-                                            ? variantColor
-                                            : variantColor[index],
+                                        variantSize: typeof variantSize === 'string' ? variantSize : variantSize[index],
+                                        variantColor: typeof variantColor === 'string' ? variantColor : variantColor[index],
                                         variantProductSKU: typeof variantProductSKU === 'string'
                                             ? variantProductSKU
                                             : variantProductSKU[index],
-                                        variantQuantity: typeof variantQuantity === 'string'
-                                            ? variantQuantity
-                                            : variantQuantity[index],
+                                        variantQuantity: typeof variantQuantity === 'string' ? variantQuantity : variantQuantity[index],
                                         variantRegularPrice: typeof variantRegularPrice === 'string'
                                             ? variantRegularPrice
                                             : variantRegularPrice[index],
@@ -410,24 +374,16 @@ class ProductController {
                                 }
                                 const variant = new ProductModel_1.VariantModel({
                                     variantName: VariantName[index],
-                                    variantSize: typeof variantSize === 'string'
-                                        ? variantSize
-                                        : variantSize[index],
-                                    variantColor: typeof variantColor === 'string'
-                                        ? variantColor
-                                        : variantColor[index],
+                                    variantSize: typeof variantSize === 'string' ? variantSize : variantSize[index],
+                                    variantColor: typeof variantColor === 'string' ? variantColor : variantColor[index],
                                     variantProductSKU: typeof variantProductSKU === 'string'
                                         ? variantProductSKU
                                         : variantProductSKU[index],
-                                    variantQuantity: typeof variantQuantity === 'string'
-                                        ? variantQuantity
-                                        : variantQuantity[index],
+                                    variantQuantity: typeof variantQuantity === 'string' ? variantQuantity : variantQuantity[index],
                                     variantRegularPrice: typeof variantRegularPrice === 'string'
                                         ? variantRegularPrice
                                         : variantRegularPrice[index],
-                                    variantSalePrice: typeof variantSalePrice === 'string'
-                                        ? variantSalePrice
-                                        : variantSalePrice[index],
+                                    variantSalePrice: typeof variantSalePrice === 'string' ? variantSalePrice : variantSalePrice[index],
                                     variantImagesFile: imagesFileVariant,
                                     product: product._id,
                                 });
@@ -477,8 +433,7 @@ class ProductController {
                     });
                     for (let index = 0; index < variants.length; index++) {
                         // Lấy tất cả các ảnh trong variant
-                        const deletedImageArray = variants[index]
-                            .variantImages;
+                        const deletedImageArray = variants[index].variantImages;
                         // Xóa hết tất cả các ảnh đó ở trên Cloudinary
                         for (let i = 0; i < (deletedImageArray === null || deletedImageArray === void 0 ? void 0 : deletedImageArray.length); i++) {
                             const deletedImage = deletedImageArray[i];

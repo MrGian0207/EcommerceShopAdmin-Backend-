@@ -83,9 +83,7 @@ class OrdersController {
         return __awaiter(this, void 0, void 0, function* () {
             var _a, _b, _c;
             try {
-                const page = ((_a = req.query) === null || _a === void 0 ? void 0 : _a.page)
-                    ? (_b = req.query) === null || _b === void 0 ? void 0 : _b.page
-                    : '1';
+                const page = ((_a = req.query) === null || _a === void 0 ? void 0 : _a.page) ? (_b = req.query) === null || _b === void 0 ? void 0 : _b.page : '1';
                 const brandsPerPage = 10;
                 const search = (_c = req.query) === null || _c === void 0 ? void 0 : _c.search;
                 let numberOfOrders = 0;
@@ -98,8 +96,14 @@ class OrdersController {
                     .skip((parseInt(page) - 1) * brandsPerPage)
                     .limit(brandsPerPage);
                 return res.json({
-                    status: 'Success',
-                    data: orders,
+                    data: orders.map((order) => {
+                        var _a, _b;
+                        const orderObject = order.toObject();
+                        const totalProducts = (_a = orderObject.quantityProducts) === null || _a === void 0 ? void 0 : _a.reduce((total, quantity) => total + quantity, 0);
+                        const totalPrice = (_b = orderObject.priceProducts) === null || _b === void 0 ? void 0 : _b.reduce((total, price) => total + price, 0);
+                        return Object.assign(Object.assign({}, orderObject), { totalProducts,
+                            totalPrice });
+                    }),
                     numbers: numberOfOrders,
                 });
             }
@@ -114,21 +118,32 @@ class OrdersController {
     }
     getOne(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
             try {
                 const id = req.params.id;
-                const order = yield OrdersModel_1.default.findOne({ _id: id }).populate('products');
-                const idProducts = (_a = order === null || order === void 0 ? void 0 : order.products) === null || _a === void 0 ? void 0 : _a.map((product) => product._id);
-                let imagesOfProduct = [];
-                for (let index = 0; index < idProducts.length; index++) {
-                    const images = (yield ProductModel_1.VariantModel.find({
-                        product: idProducts[index],
-                    }).distinct('variantImagesFile'));
-                    imagesOfProduct.push(images[0]);
-                }
-                return res.status(200).json({
-                    status: 'Success',
-                    data: { order, imagesOfProduct },
+                yield OrdersModel_1.default.findOne({ _id: id })
+                    .populate({
+                    path: 'products',
+                    populate: {
+                        path: 'variants',
+                    },
+                })
+                    .then((order) => {
+                    const orderObject = order === null || order === void 0 ? void 0 : order.toObject();
+                    const variantIDs = orderObject === null || orderObject === void 0 ? void 0 : orderObject.variantIDs;
+                    const filteredVariants = orderObject === null || orderObject === void 0 ? void 0 : orderObject.products.flatMap((product) => {
+                        var _a;
+                        return (_a = product.variants) === null || _a === void 0 ? void 0 : _a.filter((variant) => {
+                            return variantIDs === null || variantIDs === void 0 ? void 0 : variantIDs.includes(variant === null || variant === void 0 ? void 0 : variant.variantID);
+                        });
+                    });
+                    const imagesProductOfOrder = filteredVariants === null || filteredVariants === void 0 ? void 0 : filteredVariants.map((variant) => { var _a; return (_a = variant === null || variant === void 0 ? void 0 : variant.variantImages) === null || _a === void 0 ? void 0 : _a[0]; });
+                    return res.status(200).json(Object.assign(Object.assign({}, orderObject), { imagesProductOfOrder }));
+                })
+                    .catch((error) => {
+                    return res.status(404).json({
+                        status: 'Error',
+                        message: error.message,
+                    });
                 });
             }
             catch (error) {
@@ -143,7 +158,7 @@ class OrdersController {
     deleteOne(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { id } = req.body;
+                const { id } = req.params;
                 if (!id) {
                     return res.status(400).json({
                         status: 'Error',

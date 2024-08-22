@@ -17,6 +17,7 @@ const SlideModel_1 = __importDefault(require("../../models/SlideModel"));
 class SlideController {
     store(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log(req.body);
             try {
                 const { heading, primaryButtonText, primaryButtonLink, secondaryButtonText, secondaryButtonLink, description, displaySlide, } = req.body;
                 const image = req.file;
@@ -97,10 +98,7 @@ class SlideController {
                 const { id } = req.params;
                 const slide = yield SlideModel_1.default.findById(id);
                 if (slide) {
-                    return res.status(200).json({
-                        status: 'Success',
-                        data: slide,
-                    });
+                    return res.status(200).json(slide);
                 }
             }
             catch (error) {

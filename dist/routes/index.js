@@ -4,21 +4,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const RegisterRouter_1 = __importDefault(require("./RegisterRouter"));
-const LoginRouter_1 = __importDefault(require("./LoginRouter"));
+const BrandsRouter_1 = __importDefault(require("./BrandsRouter"));
 const DashboardRouter_1 = __importDefault(require("./DashboardRouter"));
-const RefreshTokenRouter_1 = __importDefault(require("./RefreshTokenRouter"));
+const ForgotPasswordRouter_1 = __importDefault(require("./ForgotPasswordRouter"));
+const LoginRouter_1 = __importDefault(require("./LoginRouter"));
 const LogoutRouter_1 = __importDefault(require("./LogoutRouter"));
 const MainCategoriesRouter_1 = __importDefault(require("./MainCategoriesRouter"));
-const SubCategoriesRouter_1 = __importDefault(require("./SubCategoriesRouter"));
-const BrandsRouter_1 = __importDefault(require("./BrandsRouter"));
-const ProductRouter_1 = __importDefault(require("./ProductRouter"));
-const OrdersRouter_1 = __importDefault(require("./OrdersRouter"));
-const UsersRouter_1 = __importDefault(require("./UsersRouter"));
 const NewletterRouter_1 = __importDefault(require("./NewletterRouter"));
-const SlideRouter_1 = __importDefault(require("./SlideRouter"));
+const OrdersRouter_1 = __importDefault(require("./OrdersRouter"));
+const ProductRouter_1 = __importDefault(require("./ProductRouter"));
+const RefreshTokenRouter_1 = __importDefault(require("./RefreshTokenRouter"));
+const RegisterRouter_1 = __importDefault(require("./RegisterRouter"));
 const SettingsRouter_1 = __importDefault(require("./SettingsRouter"));
-const ForgotPasswordRouter_1 = __importDefault(require("./ForgotPasswordRouter"));
+const SlideRouter_1 = __importDefault(require("./SlideRouter"));
+const SubCategoriesRouter_1 = __importDefault(require("./SubCategoriesRouter"));
+const UsersRouter_1 = __importDefault(require("./UsersRouter"));
 const indexRouter = (0, express_1.Router)();
 indexRouter.get('/', (req, res) => {
     res.json({

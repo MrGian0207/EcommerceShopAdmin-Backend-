@@ -1,20 +1,13 @@
-import SettingsController from '../admin/controllers/Settings/SettingsController';
-import { Router } from 'express';
-import authenToken from '../middlewares/authenToken';
+import { Router } from 'express'
 
-const settingsController = new SettingsController();
-const settingsRouter = Router();
+import SettingsController from '../admin/controllers/Settings/SettingsController'
+import authenToken from '../middlewares/authenToken'
 
-settingsRouter.get('/settings', authenToken, settingsController.getUser);
-settingsRouter.post(
-  '/settings',
-  authenToken,
-  settingsController.addUserWithRole,
-);
-settingsRouter.put(
-  '/settings/update-password',
-  authenToken,
-  settingsController.changePassword,
-);
+const settingsController = new SettingsController()
+const settingsRouter = Router()
 
-export default settingsRouter;
+settingsRouter.get('/settings', authenToken, settingsController.getUser)
+settingsRouter.post('/settings/addRole', authenToken, settingsController.addUserWithRole)
+settingsRouter.put('/settings/update-password', authenToken, settingsController.changePassword)
+
+export default settingsRouter

@@ -12,9 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const UserRefreshTokenModel_1 = __importDefault(require("../../models/UserRefreshTokenModel"));
-const UserModel_1 = __importDefault(require("../../models/UserModel"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const UserModel_1 = __importDefault(require("../../models/UserModel"));
+const UserRefreshTokenModel_1 = __importDefault(require("../../models/UserRefreshTokenModel"));
 class RefreshTokenController {
     refreshToken(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -22,9 +22,7 @@ class RefreshTokenController {
             const userRefreshToken = yield UserRefreshTokenModel_1.default.findOne({
                 refreshToken: RefreshToken,
             });
-            const userRole = yield UserModel_1.default.findById(userRefreshToken === null || userRefreshToken === void 0 ? void 0 : userRefreshToken.userId)
-                .select('role')
-                .exec();
+            const userRole = yield UserModel_1.default.findById(userRefreshToken === null || userRefreshToken === void 0 ? void 0 : userRefreshToken.userId).select('role').exec();
             try {
                 if (!userRefreshToken) {
                     res.status(401).json({

@@ -1,16 +1,17 @@
-import mongoose, { Schema } from 'mongoose';
-import { Newletter } from '../../types/NewLetter';
+import mongoose, { Schema } from 'mongoose'
+
+import { Newletter } from '../../types/NewLetter'
 
 const NewletterSchema = new Schema(
-   {
-      emailNewletter: {
-         type: String,
-         required: true,
-      },
-   },
-   { timestamps: true },
-);
+  {
+    email: {
+      type: String,
+      required: true,
+    },
+  },
+  { timestamps: true }
+)
 
-const NewletterModel = mongoose.model<Newletter>('Newletter', NewletterSchema);
+const NewletterModel = mongoose.model<Newletter>('Newletter', NewletterSchema)
 
-export default NewletterModel;
+export default NewletterModel

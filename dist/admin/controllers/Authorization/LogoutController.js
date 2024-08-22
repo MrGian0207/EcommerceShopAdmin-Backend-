@@ -31,9 +31,7 @@ class LogoutController {
                     path: '/',
                     sameSite: 'none',
                 });
-                res
-                    .status(200)
-                    .json({ status: 'Success', message: 'Logout successfully' });
+                res.status(200).json({ status: 'Success', message: 'Logout successfully' });
             }
             else {
                 res.status(400).json({

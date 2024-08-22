@@ -3,23 +3,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const method_override_1 = __importDefault(require("method-override"));
-const express_1 = __importDefault(require("express"));
-const cors_1 = __importDefault(require("cors"));
-const index_1 = __importDefault(require("./routes/index"));
-const connectionDB_1 = __importDefault(require("./config/connectionDB"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const express_1 = __importDefault(require("express"));
+const method_override_1 = __importDefault(require("method-override"));
+const connectionDB_1 = __importDefault(require("./config/connectionDB"));
+const index_1 = __importDefault(require("./routes/index"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 //Connect to MongoDB
 (0, connectionDB_1.default)();
 app.use((0, cors_1.default)({
     credentials: true,
-    origin: [
-        `${process.env.REACT_APP_FRONTEND_URL}`,
-        `${process.env.REACT_APP_FRONTEND_URL_DEV}`,
-    ],
+    origin: [`${process.env.REACT_APP_FRONTEND_URL}`, `${process.env.REACT_APP_FRONTEND_URL_DEV}`],
     exposedHeaders: 'content-length',
     allowedHeaders: [
         'Content-Type',
@@ -35,7 +32,7 @@ app.use((0, cors_1.default)({
         'X-CSRF-Token',
     ],
     optionsSuccessStatus: 204,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    methods: 'GET,POST,HEAD,PUT,PATCH,DELETE',
     preflightContinue: false,
 }));
 app.use((0, cookie_parser_1.default)());

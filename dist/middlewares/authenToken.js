@@ -14,7 +14,6 @@ const authenToken = (req, res, next) => {
             res.status(403).json({ status: 'Error' });
         }
         else {
-            // console.log(data);
             next();
         }
     });
