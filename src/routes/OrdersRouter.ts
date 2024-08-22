@@ -1,22 +1,15 @@
-import OrdersController from '../admin/controllers/Orders/OrdersController';
-import { Router } from 'express';
-import authenToken from '../middlewares/authenToken';
+import { Router } from 'express'
 
-const ordersController = new OrdersController();
-const ordersRouter = Router();
+import OrdersController from '../admin/controllers/Orders/OrdersController'
+import authenToken from '../middlewares/authenToken'
 
-ordersRouter.post('/orders/add', authenToken, ordersController.store);
-ordersRouter.get('/orders', authenToken, ordersController.getAll);
-ordersRouter.get('/orders/:id', authenToken, ordersController.getOne);
-ordersRouter.delete(
-  '/orders/delete/:id',
-  authenToken,
-  ordersController.deleteOne,
-);
-ordersRouter.put(
-  '/orders/:id/edit-status',
-  authenToken,
-  ordersController.updateOne,
-);
+const ordersController = new OrdersController()
+const ordersRouter = Router()
 
-export default ordersRouter;
+ordersRouter.post('/orders/add', authenToken, ordersController.store)
+ordersRouter.get('/orders', authenToken, ordersController.getAll)
+ordersRouter.get('/orders/:id', authenToken, ordersController.getOne)
+ordersRouter.delete('/orders/delete/:id', authenToken, ordersController.deleteOne)
+ordersRouter.put('/orders/:id/edit-status', authenToken, ordersController.updateOne)
+
+export default ordersRouter

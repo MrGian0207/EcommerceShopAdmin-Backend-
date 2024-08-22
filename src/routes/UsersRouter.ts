@@ -1,18 +1,14 @@
-import UsersController from '../admin/controllers/Users/UsersController';
-import { Router } from 'express';
-import upload from '../services/multer';
-import authenToken from '../middlewares/authenToken';
+import { Router } from 'express'
 
-const usersController = new UsersController();
-const usersRouter = Router();
+import UsersController from '../admin/controllers/Users/UsersController'
+import authenToken from '../middlewares/authenToken'
+import upload from '../services/multer'
 
-usersRouter.get('/users', authenToken, usersController.getAll);
-usersRouter.get('/users/:id', authenToken, usersController.getOne);
-usersRouter.put(
-  '/users',
-  authenToken,
-  upload.single('users-image'),
-  usersController.update,
-);
+const usersController = new UsersController()
+const usersRouter = Router()
 
-export default usersRouter;
+usersRouter.get('/users', authenToken, usersController.getAll)
+usersRouter.get('/users/:id', authenToken, usersController.getOne)
+usersRouter.put('/users/:id', authenToken, upload.single('image'), usersController.update)
+
+export default usersRouter

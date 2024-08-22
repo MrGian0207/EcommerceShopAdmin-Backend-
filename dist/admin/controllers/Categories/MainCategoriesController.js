@@ -67,9 +67,7 @@ class AddMainCategoriesController {
     getAll(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a, _b, _c;
-            const page = ((_a = req.query) === null || _a === void 0 ? void 0 : _a.page)
-                ? (_b = req.query) === null || _b === void 0 ? void 0 : _b.page
-                : '1';
+            const page = ((_a = req.query) === null || _a === void 0 ? void 0 : _a.page) ? (_b = req.query) === null || _b === void 0 ? void 0 : _b.page : '1';
             const search = (_c = req.query) === null || _c === void 0 ? void 0 : _c.search;
             const brandsPerPage = 10;
             let numberOfMainCategories = 0;
@@ -92,12 +90,11 @@ class AddMainCategoriesController {
                 });
             }
             if (mainCategories) {
-                return res.status(200).json({
-                    status: 'Success',
-                    data: mainCategories,
-                    products: productArray,
-                    numbers: numberOfMainCategories,
+                const data = mainCategories.map((mainCategory, index) => {
+                    const categoryObject = mainCategory.toObject();
+                    return Object.assign(Object.assign({}, categoryObject), { totalProducts: productArray[index].total });
                 });
+                return res.status(200).json({ data, numbers: numberOfMainCategories });
             }
             else {
                 return res.status(404).json({
@@ -157,6 +154,7 @@ class AddMainCategoriesController {
                         folder: 'mainCategories',
                     });
                     if (mainCategory) {
+                        ;
                         (mainCategory.name = name.trim()),
                             (mainCategory.title = title.trim()),
                             (mainCategory.slug = slug.trim()),
@@ -172,6 +170,7 @@ class AddMainCategoriesController {
                 }
                 else {
                     if (mainCategory) {
+                        ;
                         (mainCategory.name = name.trim()),
                             (mainCategory.title = title.trim()),
                             (mainCategory.slug = slug.trim()),
@@ -197,7 +196,7 @@ class AddMainCategoriesController {
     deleteOne(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { id } = req.body;
+                const { id } = req.params;
                 if (!id) {
                     return res.status(400).json({
                         status: 'Error',
@@ -249,7 +248,12 @@ class AddMainCategoriesController {
             if (nameMainCategories) {
                 return res.status(200).json({
                     status: 'Success',
-                    data: nameMainCategories,
+                    data: nameMainCategories.map((name) => {
+                        return {
+                            value: name,
+                            label: name,
+                        };
+                    }),
                 });
             }
             else {

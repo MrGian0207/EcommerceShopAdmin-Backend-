@@ -12,8 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const nodemailer_1 = __importDefault(require("nodemailer"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const nodemailer_1 = __importDefault(require("nodemailer"));
 dotenv_1.default.config();
 const hbs = require('nodemailer-express-handlebars');
 const transporter = nodemailer_1.default.createTransport({
@@ -39,14 +39,13 @@ function sendEmail(res, next, to, subject, template, context) {
     return __awaiter(this, void 0, void 0, function* () {
         //Configure email options like from, to, subject, message, attachments, template...
         const mailOptions = {
-            from: 'MrGianStore',
             to,
             subject,
             template,
             context,
         };
         // Send email options using the transporter
-        yield transporter.sendMail(mailOptions, function (err, info) {
+        transporter.sendMail(Object.assign({ from: '"MrGianStore" <noreply@mrgianstore.com>' }, mailOptions), function (err, info) {
             if (err) {
                 res.status(404).json({
                     status: 'Error',

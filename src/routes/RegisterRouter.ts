@@ -1,9 +1,10 @@
-import RegisterController from '../admin/controllers/Authorization/RegisterController';
-import { Router } from 'express';
+import { Router } from 'express'
 
-const registerController = new RegisterController();
-const registerRouter = Router();
+import RegisterController from '../admin/controllers/Authorization/RegisterController'
 
-registerRouter.post('/auth/register', registerController.store);
+const registerController = new RegisterController()
+const registerRouter = Router()
 
-export default registerRouter;
+registerRouter.post('/auth/register', registerController.store)
+
+export default registerRouter

@@ -30,6 +30,7 @@ const MainCategoriesSchema = new mongoose_1.Schema({
     slug: { type: String, required: true },
     description: { type: String, required: true },
     image: { type: String, required: true },
+    totalProducts: { type: Number },
 }, {
     timestamps: true,
 });

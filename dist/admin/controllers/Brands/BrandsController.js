@@ -20,6 +20,7 @@ class BrandsController {
             try {
                 const { name, title, slug, description } = req.body;
                 const image = req.file;
+                console.log(req.body, image);
                 // Kiểm tra các trường bắt buộc
                 if (!name || !title || !slug || !description || !image) {
                     return res.status(400).json({
@@ -66,11 +67,9 @@ class BrandsController {
     getAll(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a, _b, _c;
-            const page = ((_a = req.query) === null || _a === void 0 ? void 0 : _a.page)
-                ? (_b = req.query) === null || _b === void 0 ? void 0 : _b.page
-                : '1';
+            const page = ((_a = req.query) === null || _a === void 0 ? void 0 : _a.page) ? (_b = req.query) === null || _b === void 0 ? void 0 : _b.page : '1';
             const search = (_c = req.query) === null || _c === void 0 ? void 0 : _c.search;
-            const brandsPerPage = 10;
+            const brandsPerPage = 2;
             let numberOfBrands = 0;
             yield BrandsModel_1.default.countDocuments({}).then((countDocuments) => {
                 numberOfBrands = Math.ceil(countDocuments / brandsPerPage);
@@ -84,11 +83,7 @@ class BrandsController {
                 .skip((parseInt(page) - 1) * brandsPerPage)
                 .limit(brandsPerPage);
             if (brands) {
-                return res.status(200).json({
-                    status: 'Success',
-                    data: brands,
-                    numbers: numberOfBrands,
-                });
+                return res.status(200).json({ data: brands, numbers: numberOfBrands });
             }
             else {
                 return res.status(404).json({
@@ -148,6 +143,7 @@ class BrandsController {
                         folder: 'brands',
                     });
                     if (brands) {
+                        ;
                         (brands.name = name.trim()),
                             (brands.title = title.trim()),
                             (brands.slug = slug.trim()),
@@ -163,6 +159,7 @@ class BrandsController {
                 }
                 else {
                     if (brands) {
+                        ;
                         (brands.name = name.trim()),
                             (brands.title = title.trim()),
                             (brands.slug = slug.trim()),
@@ -188,7 +185,8 @@ class BrandsController {
     deleteOne(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { id } = req.body;
+                const { id } = req.params;
+                console.log(id);
                 if (!id) {
                     return res.status(400).json({
                         status: 'Error',
@@ -240,7 +238,12 @@ class BrandsController {
             if (nameBrands) {
                 return res.status(200).json({
                     status: 'Success',
-                    data: nameBrands,
+                    data: nameBrands.map((name) => {
+                        return {
+                            value: name,
+                            label: name,
+                        };
+                    }),
                 });
             }
             else {

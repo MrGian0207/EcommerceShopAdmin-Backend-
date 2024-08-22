@@ -1,10 +1,11 @@
-import DashboardController from '../admin/controllers/Dashboard/DashboardController';
-import { Router } from 'express';
-import authenToken from '../middlewares/authenToken';
+import { Router } from 'express'
 
-const dashboardController = new DashboardController();
-const dashboardRouter = Router();
+import DashboardController from '../admin/controllers/Dashboard/DashboardController'
+import authenToken from '../middlewares/authenToken'
 
-dashboardRouter.get('/dashboard', authenToken, dashboardController.index);
+const dashboardController = new DashboardController()
+const dashboardRouter = Router()
 
-export default dashboardRouter;
+dashboardRouter.get('/dashboard', authenToken, dashboardController.index)
+
+export default dashboardRouter

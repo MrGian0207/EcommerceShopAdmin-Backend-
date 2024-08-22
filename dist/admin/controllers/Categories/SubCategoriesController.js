@@ -20,6 +20,8 @@ class SubCategoriesController {
             try {
                 const { name, title, slug, description, category } = req.body;
                 const image = req.file;
+                console.log(req.body);
+                console.log(image);
                 // Kiểm tra các trường bắt buộc
                 if (!name || !title || !slug || !description || !category || !image) {
                     return res.status(400).json({
@@ -67,9 +69,7 @@ class SubCategoriesController {
     getAll(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a, _b, _c;
-            const page = ((_a = req.query) === null || _a === void 0 ? void 0 : _a.page)
-                ? (_b = req.query) === null || _b === void 0 ? void 0 : _b.page
-                : '1';
+            const page = ((_a = req.query) === null || _a === void 0 ? void 0 : _a.page) ? (_b = req.query) === null || _b === void 0 ? void 0 : _b.page : '1';
             const brandsPerPage = 10;
             const search = (_c = req.query) === null || _c === void 0 ? void 0 : _c.search;
             let numberOfSubCategories = 0;
@@ -82,11 +82,7 @@ class SubCategoriesController {
                 .skip((parseInt(page) - 1) * brandsPerPage)
                 .limit(brandsPerPage);
             if (subCategories) {
-                return res.status(200).json({
-                    status: 'Success',
-                    data: subCategories,
-                    numbers: numberOfSubCategories,
-                });
+                return res.status(200).json({ data: subCategories, numbers: numberOfSubCategories });
             }
             else {
                 return res.status(404).json({
@@ -146,6 +142,7 @@ class SubCategoriesController {
                         folder: 'subCategories',
                     });
                     if (subCategory) {
+                        ;
                         (subCategory.name = name.trim()),
                             (subCategory.title = title.trim()),
                             (subCategory.slug = slug.trim()),
@@ -162,6 +159,7 @@ class SubCategoriesController {
                 }
                 else {
                     if (subCategory) {
+                        ;
                         (subCategory.name = name.trim()),
                             (subCategory.title = title.trim()),
                             (subCategory.slug = slug.trim()),
@@ -240,7 +238,12 @@ class SubCategoriesController {
             if (nameSubCategories) {
                 return res.status(200).json({
                     status: 'Success',
-                    data: nameSubCategories,
+                    data: nameSubCategories.map((name) => {
+                        return {
+                            value: name,
+                            label: name,
+                        };
+                    }),
                 });
             }
             else {

@@ -1,9 +1,10 @@
-import LogoutController from '../admin/controllers/Authorization/LogoutController';
-import { Router } from 'express';
+import { Router } from 'express'
 
-const logoutController = new LogoutController();
-const logoutRouter = Router();
+import LogoutController from '../admin/controllers/Authorization/LogoutController'
 
-logoutRouter.post('/logout', logoutController.logout);
+const logoutController = new LogoutController()
+const logoutRouter = Router()
 
-export default logoutRouter;
+logoutRouter.post('/logout', logoutController.logout)
+
+export default logoutRouter

@@ -1,47 +1,48 @@
-import MainCategoriesController from '../admin/controllers/Categories/MainCategoriesController';
-import { Router } from 'express';
-import upload from '../services/multer';
-import authenToken from '../middlewares/authenToken';
+import { Router } from 'express'
 
-const mainCategoriesController = new MainCategoriesController();
-const mainCategoriesRouter = Router();
+import MainCategoriesController from '../admin/controllers/Categories/MainCategoriesController'
+import authenToken from '../middlewares/authenToken'
+import upload from '../services/multer'
+
+const mainCategoriesController = new MainCategoriesController()
+const mainCategoriesRouter = Router()
 
 mainCategoriesRouter.post(
   '/categories/main-categories/add',
   authenToken,
-  upload.single('category-image'),
-  mainCategoriesController.store,
-);
+  upload.single('image'),
+  mainCategoriesController.store
+)
 
 mainCategoriesRouter.get(
   '/categories/main-categories',
   authenToken,
-  mainCategoriesController.getAll,
-);
+  mainCategoriesController.getAll
+)
 
 mainCategoriesRouter.get(
   '/categories/main-categories/name',
   authenToken,
-  mainCategoriesController.categories,
-);
+  mainCategoriesController.categories
+)
 
 mainCategoriesRouter.get(
   '/categories/main-categories/:id',
   authenToken,
-  mainCategoriesController.getOne,
-);
+  mainCategoriesController.getOne
+)
 
 mainCategoriesRouter.post(
   '/categories/main-categories/:id',
   authenToken,
-  upload.single('category-image'),
-  mainCategoriesController.update,
-);
+  upload.single('image'),
+  mainCategoriesController.update
+)
 
 mainCategoriesRouter.delete(
   '/categories/main-categories/delete/:id',
   authenToken,
-  mainCategoriesController.deleteOne,
-);
+  mainCategoriesController.deleteOne
+)
 
-export default mainCategoriesRouter;
+export default mainCategoriesRouter

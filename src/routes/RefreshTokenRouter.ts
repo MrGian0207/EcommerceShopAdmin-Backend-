@@ -1,9 +1,10 @@
-import RefreshTokenController from '../admin/controllers/Token/RefreshTokenController';
-import { Router } from 'express';
+import { Router } from 'express'
 
-const refreshTokenController = new RefreshTokenController();
-const refreshTokenRouter = Router();
+import RefreshTokenController from '../admin/controllers/Token/RefreshTokenController'
 
-refreshTokenRouter.post('/refreshToken', refreshTokenController.refreshToken);
+const refreshTokenController = new RefreshTokenController()
+const refreshTokenRouter = Router()
 
-export default refreshTokenRouter;
+refreshTokenRouter.post('/refreshToken', refreshTokenController.refreshToken)
+
+export default refreshTokenRouter

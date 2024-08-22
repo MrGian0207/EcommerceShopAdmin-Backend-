@@ -1,7 +1,7 @@
-import { Schema } from 'mongoose';
+import { Schema } from 'mongoose'
 
 export interface UserRefreshToken {
-   userId: Schema.Types.ObjectId;
-   refreshToken: string;
-   createdAt?: Date;
+  userId: Schema.Types.ObjectId
+  refreshToken: string
+  createdAt?: Date
 }

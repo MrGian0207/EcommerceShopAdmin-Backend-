@@ -1,11 +1,12 @@
-import NewletterController from '../admin/controllers/Newletter/NewletterController';
-import { Router } from 'express';
-import authenToken from '../middlewares/authenToken';
+import { Router } from 'express'
 
-const newletterController = new NewletterController();
-const newletterRouter = Router();
+import NewletterController from '../admin/controllers/Newletter/NewletterController'
+import authenToken from '../middlewares/authenToken'
 
-newletterRouter.post('/newletter/add', authenToken, newletterController.store);
-newletterRouter.get('/newletter', authenToken, newletterController.getAll);
+const newletterController = new NewletterController()
+const newletterRouter = Router()
 
-export default newletterRouter;
+newletterRouter.post('/newletter/add', authenToken, newletterController.store)
+newletterRouter.get('/newletter', authenToken, newletterController.getAll)
+
+export default newletterRouter

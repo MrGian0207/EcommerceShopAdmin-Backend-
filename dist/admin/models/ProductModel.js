@@ -25,6 +25,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.VariantModel = exports.ProductModel = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
+const uuid_1 = require("uuid");
 const ProductSchema = new mongoose_1.Schema({
     name: { type: String, required: true },
     title: { type: String, required: true },
@@ -36,7 +37,7 @@ const ProductSchema = new mongoose_1.Schema({
     gender: { type: String, required: true },
     status: { type: String, required: true },
     productCode: { type: String, required: true },
-    tag: { type: String, required: true },
+    tags: { type: [String], required: true },
     featureProduct: { type: String, required: true },
     defaultVariant: { type: String, required: true },
     variants: [
@@ -49,14 +50,15 @@ const ProductSchema = new mongoose_1.Schema({
     timestamps: true,
 });
 const VariantSchema = new mongoose_1.Schema({
+    variantID: { type: String, default: uuid_1.v4 },
     variantName: { type: String, required: true },
     variantSize: { type: String, required: true },
     variantColor: { type: String, required: true },
     variantProductSKU: { type: String, required: true },
-    variantQuantity: { type: String, required: true },
+    variantQuantity: { type: Number, required: true },
     variantRegularPrice: { type: String, required: true },
     variantSalePrice: { type: String, required: true },
-    variantImagesFile: { type: Array, required: true },
+    variantImages: { type: [String] },
     product: {
         type: mongoose_1.default.Schema.Types.ObjectId,
         ref: 'Product',

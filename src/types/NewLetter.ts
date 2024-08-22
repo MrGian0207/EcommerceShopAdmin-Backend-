@@ -1,3 +1,3 @@
 export interface Newletter {
-   email?: string;
+  email: string
 }

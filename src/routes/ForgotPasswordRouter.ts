@@ -1,12 +1,10 @@
-import ForgotPasswordController from '../admin/controllers/Authorization/ForgotPasswordController';
-import { Router } from 'express';
+import { Router } from 'express'
 
-const forgotPasswordController = new ForgotPasswordController();
-const forgotPasswordRouter = Router();
+import ForgotPasswordController from '../admin/controllers/Authorization/ForgotPasswordController'
 
-forgotPasswordRouter.post(
-  '/auth/forgot-password',
-  forgotPasswordController.forgotPassword,
-);
+const forgotPasswordController = new ForgotPasswordController()
+const forgotPasswordRouter = Router()
 
-export default forgotPasswordRouter;
+forgotPasswordRouter.post('/auth/forgot-password', forgotPasswordController.forgotPassword)
+
+export default forgotPasswordRouter

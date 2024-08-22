@@ -1,60 +1,61 @@
-import { Router, Express } from 'express';
-import registerRouter from './RegisterRouter';
-import loginRouter from './LoginRouter';
-import dashboardRouter from './DashboardRouter';
-import refreshTokenRouter from './RefreshTokenRouter';
-import logoutRouter from './LogoutRouter';
-import mainCategoriesRouter from './MainCategoriesRouter';
-import subCategoriesRouter from './SubCategoriesRouter';
-import brandsRouter from './BrandsRouter';
-import productRouter from './ProductRouter';
-import ordersRouter from './OrdersRouter';
-import usersRouter from './UsersRouter';
-import newletterRouter from './NewletterRouter';
-import slideRouter from './SlideRouter';
-import settingsRouter from './SettingsRouter';
-import forgotPasswordRouter from './ForgotPasswordRouter';
+import { Express, Router } from 'express'
 
-const indexRouter = Router();
+import brandsRouter from './BrandsRouter'
+import dashboardRouter from './DashboardRouter'
+import forgotPasswordRouter from './ForgotPasswordRouter'
+import loginRouter from './LoginRouter'
+import logoutRouter from './LogoutRouter'
+import mainCategoriesRouter from './MainCategoriesRouter'
+import newletterRouter from './NewletterRouter'
+import ordersRouter from './OrdersRouter'
+import productRouter from './ProductRouter'
+import refreshTokenRouter from './RefreshTokenRouter'
+import registerRouter from './RegisterRouter'
+import settingsRouter from './SettingsRouter'
+import slideRouter from './SlideRouter'
+import subCategoriesRouter from './SubCategoriesRouter'
+import usersRouter from './UsersRouter'
+
+const indexRouter = Router()
 indexRouter.get('/', (req, res) => {
-   res.json({
-      message: 'This is the Ecommerce shop backend',
-   });
-});
+  res.json({
+    message: 'This is the Ecommerce shop backend',
+  })
+})
 
 // ROUTE
 function Route(app: Express) {
-   app.use('/', indexRouter);
+  app.use('/', indexRouter)
 
-   app.use('/', registerRouter);
+  app.use('/', registerRouter)
 
-   app.use('/', loginRouter);
+  app.use('/', loginRouter)
 
-   app.use('/', forgotPasswordRouter);
+  app.use('/', forgotPasswordRouter)
 
-   app.use('/', dashboardRouter);
+  app.use('/', dashboardRouter)
 
-   app.use('/', refreshTokenRouter);
+  app.use('/', refreshTokenRouter)
 
-   app.use('/', logoutRouter);
+  app.use('/', logoutRouter)
 
-   app.use('/', mainCategoriesRouter);
+  app.use('/', mainCategoriesRouter)
 
-   app.use('/', subCategoriesRouter);
+  app.use('/', subCategoriesRouter)
 
-   app.use('/', brandsRouter);
+  app.use('/', brandsRouter)
 
-   app.use('/', productRouter);
+  app.use('/', productRouter)
 
-   app.use('/', ordersRouter);
+  app.use('/', ordersRouter)
 
-   app.use('/', usersRouter);
+  app.use('/', usersRouter)
 
-   app.use('/', newletterRouter);
+  app.use('/', newletterRouter)
 
-   app.use('/', slideRouter);
+  app.use('/', slideRouter)
 
-   app.use('/', settingsRouter);
+  app.use('/', settingsRouter)
 }
 
-export default Route;
+export default Route
