@@ -21,8 +21,6 @@ class ProductController {
                 const payload = JSON.parse(req.body.payload);
                 const { name, title, slug, description, category, subCategory, brand, gender, status, productCode, tags, featureProduct, defaultVariant, variants, } = payload;
                 const variantImages = req.files;
-                console.log(payload);
-                console.log(variantImages);
                 // Kiểm tra các trường bắt buộc
                 const requiredFields = [
                     name,
@@ -151,7 +149,6 @@ class ProductController {
     activeProducts(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log(req.body);
                 const update = req.body;
                 const product = yield ProductModel_1.ProductModel.findByIdAndUpdate(update.id, {
                     featureProduct: update.featureState,
@@ -180,7 +177,6 @@ class ProductController {
                 const { id } = req.params;
                 const product = yield ProductModel_1.ProductModel.findById(id).populate('variants');
                 if (product) {
-                    console.log(product);
                     return res.status(200).json(product);
                 }
             }
@@ -194,11 +190,11 @@ class ProductController {
     }
     update(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a, _b;
             try {
                 const { id } = req.params;
-                let { name, title, slug, description, category, subCategory, brand, gender, status, productCode, tags, featureProduct, defaultVariant, variantName, variantSize, variantColor, variantProductSKU, variantQuantity, variantRegularPrice, variantSalePrice, variantNumberImagesOfVariants, idVariantArray, idVariantDeletedArray, } = req.body;
-                const variantImages = req.files;
+                const payload = JSON.parse(req.body.payload);
+                let { name, title, slug, description, category, subCategory, brand, gender, status, productCode, tags, featureProduct, defaultVariant, variants, } = payload;
+                const variantImagesPayload = req.files;
                 // Kiểm tra các trường bắt buộc
                 const requiredFields = [
                     name,
@@ -213,6 +209,8 @@ class ProductController {
                     productCode,
                     tags,
                     featureProduct,
+                    defaultVariant,
+                    variants,
                 ];
                 if (requiredFields.some((field) => !field)) {
                     return res.status(400).json({
@@ -220,28 +218,7 @@ class ProductController {
                         message: 'Missing required fields',
                     });
                 }
-                // Xử lý get idVariantArray và idVariantDeletedArray
-                let idArray = [];
-                let idDeletedArray = [];
-                if (typeof idVariantArray === 'string' && idVariantArray !== undefined) {
-                    idArray = [idVariantArray];
-                }
-                else {
-                    idArray = idVariantArray;
-                }
-                let VariantName = [];
-                if (typeof variantName === 'string') {
-                    VariantName = [variantName];
-                }
-                else {
-                    VariantName = variantName;
-                }
-                if (typeof idVariantDeletedArray === 'string' && idVariantDeletedArray !== undefined) {
-                    idDeletedArray = [idVariantDeletedArray];
-                }
-                else {
-                    idDeletedArray = idVariantDeletedArray;
-                }
+                // Cập nhật sản phẩm
                 const product = yield ProductModel_1.ProductModel.findByIdAndUpdate(id, {
                     name,
                     title,
@@ -257,158 +234,86 @@ class ProductController {
                     featureProduct,
                     defaultVariant,
                 });
-                if (product) {
-                    if (idDeletedArray !== undefined) {
-                        yield ProductModel_1.VariantModel.deleteMany({
-                            _id: {
-                                $in: idDeletedArray,
-                            },
-                        });
-                    }
-                    let variantNumberImagesOfVariantArray = [];
-                    if (variantNumberImagesOfVariants) {
-                        variantNumberImagesOfVariantArray = variantNumberImagesOfVariants
-                            .trim()
-                            .split(' ')
-                            .map((numberImages) => Number.parseInt(numberImages));
-                    }
-                    if (idArray !== undefined) {
-                        // Case: Có idArray thì update variant và thêm những variant mới từ phía client gửi (nếu có)
-                        try {
-                            for (let index = 0; index < (VariantName === null || VariantName === void 0 ? void 0 : VariantName.length); index++) {
-                                // Lấy ra những image có thay đổi hoặc update
-                                let imagesFileVariant = [];
-                                for (let i = 0; i < variantNumberImagesOfVariantArray[index]; i++) {
-                                    if (variantImages && Array.isArray(variantImages)) {
-                                        const imageUrl = yield cloudinary_1.default.uploader.upload((_a = variantImages[0]) === null || _a === void 0 ? void 0 : _a.path, {
-                                            folder: 'variant',
-                                        });
-                                        imagesFileVariant.push(imageUrl.secure_url);
-                                        variantImages === null || variantImages === void 0 ? void 0 : variantImages.splice(0, 1);
-                                    }
-                                }
-                                // Update đối với những variant đã tồn tại trong DB
-                                if (index <= idArray.length - 1) {
-                                    // lấy ra những hình ảnh đã được upload trên db của variant.
-                                    let uploadedImage = [];
-                                    const variantUpdated = yield ProductModel_1.VariantModel.findById({
-                                        _id: idArray[index],
-                                    });
-                                    if (variantUpdated) {
-                                        uploadedImage = variantUpdated.variantImages;
-                                    }
-                                    const variant = yield ProductModel_1.VariantModel.findOneAndUpdate({
-                                        _id: idArray[index],
-                                    }, {
-                                        variantName: VariantName[index],
-                                        variantSize: typeof variantSize === 'string' ? variantSize : variantSize[index],
-                                        variantColor: typeof variantColor === 'string' ? variantColor : variantColor[index],
-                                        variantProductSKU: typeof variantProductSKU === 'string'
-                                            ? variantProductSKU
-                                            : variantProductSKU[index],
-                                        variantQuantity: typeof variantQuantity === 'string'
-                                            ? variantQuantity
-                                            : variantQuantity[index],
-                                        variantRegularPrice: typeof variantRegularPrice === 'string'
-                                            ? variantRegularPrice
-                                            : variantRegularPrice[index],
-                                        variantSalePrice: typeof variantSalePrice === 'string'
-                                            ? variantSalePrice
-                                            : variantSalePrice[index],
-                                        variantImagesFile: (imagesFileVariant === null || imagesFileVariant === void 0 ? void 0 : imagesFileVariant.length) > 0
-                                            ? imagesFileVariant.concat(uploadedImage)
-                                            : uploadedImage,
-                                    });
-                                    // check Variant đã được update hay chưa.
-                                    if (!variant) {
-                                        return res.status(404).json({
-                                            status: 'Error',
-                                            message: 'Variant has not been updated successfully',
-                                        });
-                                    }
-                                }
-                                else {
-                                    // Tạo variant mới được thêm vào từ phía client
-                                    const variant = new ProductModel_1.VariantModel({
-                                        variantName: VariantName[index],
-                                        variantSize: typeof variantSize === 'string' ? variantSize : variantSize[index],
-                                        variantColor: typeof variantColor === 'string' ? variantColor : variantColor[index],
-                                        variantProductSKU: typeof variantProductSKU === 'string'
-                                            ? variantProductSKU
-                                            : variantProductSKU[index],
-                                        variantQuantity: typeof variantQuantity === 'string' ? variantQuantity : variantQuantity[index],
-                                        variantRegularPrice: typeof variantRegularPrice === 'string'
-                                            ? variantRegularPrice
-                                            : variantRegularPrice[index],
-                                        variantSalePrice: typeof variantSalePrice === 'string'
-                                            ? variantSalePrice
-                                            : variantSalePrice[index],
-                                        variantImagesFile: imagesFileVariant,
-                                        product: product._id,
-                                    });
-                                    yield variant.save();
-                                    yield product.updateOne({
-                                        $push: { variants: variant._id },
-                                    });
-                                }
-                            }
-                        }
-                        catch (error) {
-                            console.log(error);
-                        }
-                    }
-                    else {
-                        // Case: Không có idArray thì thêm những variant mới từ phía client gửi
-                        for (let index = 0; index < (VariantName === null || VariantName === void 0 ? void 0 : VariantName.length); index++) {
-                            try {
-                                // Lấy ra những image có thay đổi hoặc update
-                                let imagesFileVariant = [];
-                                for (let i = 0; i < variantNumberImagesOfVariantArray[index]; i++) {
-                                    if (variantImages && Array.isArray(variantImages)) {
-                                        const imageUrl = yield cloudinary_1.default.uploader.upload((_b = variantImages[0]) === null || _b === void 0 ? void 0 : _b.path, {
-                                            folder: 'variant',
-                                        });
-                                        imagesFileVariant.push(imageUrl.secure_url);
-                                        variantImages === null || variantImages === void 0 ? void 0 : variantImages.splice(0, 1);
-                                    }
-                                }
-                                const variant = new ProductModel_1.VariantModel({
-                                    variantName: VariantName[index],
-                                    variantSize: typeof variantSize === 'string' ? variantSize : variantSize[index],
-                                    variantColor: typeof variantColor === 'string' ? variantColor : variantColor[index],
-                                    variantProductSKU: typeof variantProductSKU === 'string'
-                                        ? variantProductSKU
-                                        : variantProductSKU[index],
-                                    variantQuantity: typeof variantQuantity === 'string' ? variantQuantity : variantQuantity[index],
-                                    variantRegularPrice: typeof variantRegularPrice === 'string'
-                                        ? variantRegularPrice
-                                        : variantRegularPrice[index],
-                                    variantSalePrice: typeof variantSalePrice === 'string' ? variantSalePrice : variantSalePrice[index],
-                                    variantImagesFile: imagesFileVariant,
-                                    product: product._id,
-                                });
-                                yield variant.save();
-                                yield product.updateOne({
-                                    $push: { variants: variant._id },
-                                });
-                            }
-                            catch (error) {
-                                console.log(error);
-                                return res.status(500).json({
-                                    status: 'Error',
-                                    message: 'Error creating product',
-                                });
-                            }
-                        }
-                    }
+                if (!product) {
+                    return res.status(404).json({
+                        status: 'Error',
+                        message: 'Product not found',
+                    });
                 }
+                // Xử lý các variant
+                const variantPromises = variants.map((variant) => __awaiter(this, void 0, void 0, function* () {
+                    try {
+                        const imagesUpdated = variant.variantImages.filter((image) => image === 'newImage');
+                        if (imagesUpdated.length > 0) {
+                            let images = [];
+                            if (Array.isArray(variantImagesPayload)) {
+                                images = variantImagesPayload.slice(0, imagesUpdated.length);
+                                variantImagesPayload.splice(0, imagesUpdated.length);
+                            }
+                            const uploadPromises = images.map((image) => cloudinary_1.default.uploader.upload(image.path, {
+                                folder: 'variant',
+                            }));
+                            const uploadedImages = yield Promise.all(uploadPromises);
+                            yield ProductModel_1.VariantModel.findOneAndUpdate({ variantID: variant.variantID }, {
+                                variantName: variant.variantName,
+                                variantSize: variant.variantSize,
+                                variantColor: variant.variantColor,
+                                variantProductSKU: variant.variantProductSKU,
+                                variantQuantity: variant.variantQuantity,
+                                variantRegularPrice: variant.variantRegularPrice,
+                                variantSalePrice: variant.variantSalePrice,
+                                variantImages: [
+                                    ...variant.variantImages.filter((variantImage) => variantImage !== 'newImage'),
+                                    ...uploadedImages.map((img) => img.secure_url),
+                                ],
+                            }).then((variantUpdated) => __awaiter(this, void 0, void 0, function* () {
+                                if (!variantUpdated) {
+                                    const uploadedImages = yield Promise.all(uploadPromises);
+                                    const newVariant = new ProductModel_1.VariantModel({
+                                        variantName: variant.variantName,
+                                        variantSize: variant.variantSize,
+                                        variantColor: variant.variantColor,
+                                        variantProductSKU: variant.variantProductSKU,
+                                        variantQuantity: variant.variantQuantity,
+                                        variantRegularPrice: variant.variantRegularPrice,
+                                        variantSalePrice: variant.variantSalePrice,
+                                        variantImages: uploadedImages.map((img) => img.secure_url),
+                                        product: id,
+                                    });
+                                    yield newVariant.save();
+                                    yield product.updateOne({
+                                        $push: { variants: newVariant._id },
+                                    });
+                                }
+                            }));
+                        }
+                        else {
+                            yield ProductModel_1.VariantModel.findOneAndUpdate({ variantID: variant.variantID }, {
+                                variantName: variant.variantName,
+                                variantSize: variant.variantSize,
+                                variantColor: variant.variantColor,
+                                variantProductSKU: variant.variantProductSKU,
+                                variantQuantity: variant.variantQuantity,
+                                variantRegularPrice: variant.variantRegularPrice,
+                                variantSalePrice: variant.variantSalePrice,
+                                variantImages: [...variant.variantImages],
+                            });
+                        }
+                    }
+                    catch (err) {
+                        // console.error('Error processing variant:', err)
+                        throw err;
+                    }
+                }));
+                yield Promise.all(variantPromises);
+                // Sau khi tất cả các variant đã được xử lý, gửi phản hồi thành công
                 return res.status(200).json({
                     status: 'Success',
                     message: 'Product updated successfully',
                 });
             }
             catch (error) {
-                console.log(error);
+                console.error('Error updating product:', error);
                 return res.status(500).json({
                     status: 'Error',
                     message: 'Error processing variant',

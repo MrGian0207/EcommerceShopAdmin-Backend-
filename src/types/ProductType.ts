@@ -53,6 +53,7 @@ export interface productPayload {
       variantQuantity: string
       variantRegularPrice: string
       variantSalePrice: string
+      variantImages: string[]
       numberOfImages: number
     },
   ]
