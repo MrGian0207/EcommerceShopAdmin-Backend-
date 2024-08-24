@@ -232,6 +232,8 @@ class ProductController {
         variants,
       } = payload
 
+      console.log(payload)
+
       const variantImagesPayload = req.files
       // Kiểm tra các trường bắt buộc
       const requiredFields = [

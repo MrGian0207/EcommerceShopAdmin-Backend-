@@ -29,6 +29,8 @@ class SlideController {
         image,
       ]
 
+      console.log({ image })
+
       if (requiredFields.some((field) => !field)) {
         return res.status(400).json({
           status: 'Error',
@@ -64,14 +66,12 @@ class SlideController {
 
         await slide.save()
         return res.status(200).json({
-          status: 'Success',
           message: 'Slide have been saved successfully',
         })
       }
     } catch (error) {
       console.log(error)
       return res.status(500).json({
-        status: 'Error',
         message: 'Internal server error',
       })
     }
@@ -195,7 +195,7 @@ class SlideController {
 
   async deleteOne(req: Request, res: Response) {
     try {
-      const { id } = req.body
+      const { id } = req.params
 
       if (!id) {
         return res.status(400).json({

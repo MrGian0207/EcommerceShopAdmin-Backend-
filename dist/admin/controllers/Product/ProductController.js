@@ -194,6 +194,7 @@ class ProductController {
                 const { id } = req.params;
                 const payload = JSON.parse(req.body.payload);
                 let { name, title, slug, description, category, subCategory, brand, gender, status, productCode, tags, featureProduct, defaultVariant, variants, } = payload;
+                console.log(payload);
                 const variantImagesPayload = req.files;
                 // Kiểm tra các trường bắt buộc
                 const requiredFields = [

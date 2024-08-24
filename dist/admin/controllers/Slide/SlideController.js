@@ -29,6 +29,7 @@ class SlideController {
                     displaySlide,
                     image,
                 ];
+                console.log({ image });
                 if (requiredFields.some((field) => !field)) {
                     return res.status(400).json({
                         status: 'Error',
@@ -60,7 +61,6 @@ class SlideController {
                     });
                     yield slide.save();
                     return res.status(200).json({
-                        status: 'Success',
                         message: 'Slide have been saved successfully',
                     });
                 }
@@ -68,7 +68,6 @@ class SlideController {
             catch (error) {
                 console.log(error);
                 return res.status(500).json({
-                    status: 'Error',
                     message: 'Internal server error',
                 });
             }
@@ -188,7 +187,7 @@ class SlideController {
     deleteOne(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { id } = req.body;
+                const { id } = req.params;
                 if (!id) {
                     return res.status(400).json({
                         status: 'Error',
