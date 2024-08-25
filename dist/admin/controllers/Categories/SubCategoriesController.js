@@ -186,7 +186,7 @@ class SubCategoriesController {
     deleteOne(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { id } = req.body;
+                const { id } = req.params;
                 if (!id) {
                     return res.status(400).json({
                         status: 'Error',

@@ -7,11 +7,11 @@ import upload from '../services/multer'
 const productController = new ProductController()
 const productRouter = Router()
 
-productRouter.post('/products/add', upload.array('variantImages', 20), productController.store)
-productRouter.post('/products/:id', upload.array('variantImages', 20), productController.update)
-productRouter.get('/products', authenToken, productController.getAll)
-productRouter.put('/products/:id', authenToken, productController.activeProducts)
-productRouter.get('/products/:id', authenToken, productController.getOne)
-productRouter.delete('/products/delete/:id', authenToken, productController.deleteOne)
+productRouter.post('/product/add', upload.array('variantImages', 20), productController.store)
+productRouter.post('/product/:id', upload.array('variantImages', 20), productController.update)
+productRouter.get('/product', authenToken, productController.getAll)
+productRouter.put('/product/:id', authenToken, productController.activeProducts)
+productRouter.get('/product/:id', authenToken, productController.getOne)
+productRouter.delete('/product/delete/:id', authenToken, productController.deleteOne)
 
 export default productRouter
