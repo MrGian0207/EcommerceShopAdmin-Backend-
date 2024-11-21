@@ -20,18 +20,10 @@ import usersRouter from './UsersRouter'
 
 const indexRouter = Router()
 
-indexRouter.use(
-  bodyParser.raw({
-    type: 'application/json',
-  })
-)
-
-indexRouter.use(json())
-indexRouter.use(urlencoded({ extended: true }))
-
 indexRouter.post('/', (req, res) => {
   const PAYJP_WEBHOOK_SECRET = process.env.PAYJP_WEBHOOK_SECRET
 
+  console.log({ body: req.body })
   console.log('Headers:', req.headers)
   console.log({ PAYJP_WEBHOOK_SECRET })
 
@@ -45,7 +37,6 @@ indexRouter.post('/', (req, res) => {
     throw new Error('it has not webhook secret')
   }
 
-  console.log({ body: req.body })
   const body = req.body // req.body là Buffer vì sử dụng bodyParser.raw
 
   if (PAYJP_WEBHOOK_SECRET !== signature) {
