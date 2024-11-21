@@ -1,5 +1,5 @@
-import { UploadApiResponse } from 'cloudinary'
-import { Request, Response } from 'express'
+import type { UploadApiResponse } from 'cloudinary'
+import type { Request, Response } from 'express'
 
 import cloudinary from '../../../utils/cloudinary'
 import BrandsModel from '../../models/BrandsModel'
@@ -63,7 +63,7 @@ class BrandsController {
     const page: string = (req.query?.page as string) ? (req.query?.page as string) : '1'
     const search: string = req.query?.search as string
     const brandsPerPage: number = 2
-    let numberOfBrands: number = 0
+    let numberOfBrands = 0
 
     await BrandsModel.countDocuments({}).then((countDocuments) => {
       numberOfBrands = Math.ceil(countDocuments / brandsPerPage)
@@ -74,16 +74,15 @@ class BrandsController {
         $options: 'i',
       },
     })
-      .skip((parseInt(page) - 1) * brandsPerPage)
+      .skip((Number.parseInt(page) - 1) * brandsPerPage)
       .limit(brandsPerPage)
     if (brands) {
       return res.status(200).json({ data: brands, numbers: numberOfBrands })
-    } else {
+    }
       return res.status(404).json({
         status: 'Error',
         message: 'Brands not found',
       })
-    }
   }
 
   async getOne(req: Request, res: Response) {
@@ -94,12 +93,11 @@ class BrandsController {
         status: 'Success',
         data: brands,
       })
-    } else {
+    }
       return res.status(404).json({
         status: 'Error',
         message: 'Brands not found',
       })
-    }
   }
 
   async update(req: Request, res: Response) {
@@ -124,7 +122,7 @@ class BrandsController {
         const publicIdRegex = /\/brands\/([^/.]+)/
         const matches = deletedImage.match(publicIdRegex)
 
-        await cloudinary.uploader.destroy(`brands/${matches && matches[1]}`, (error, result) => {
+        await cloudinary.uploader.destroy(`brands/${matches?.[1]}`, (error, result) => {
           if (error) {
             console.error('Failed to delete image:', error)
             // Xử lý lỗi
@@ -194,7 +192,7 @@ class BrandsController {
         const publicIdRegex = /\/brands\/([^/.]+)/
         const matches = deletedImage.match(publicIdRegex)
 
-        await cloudinary.uploader.destroy(`brands/${matches && matches[1]}`, (error, result) => {
+        await cloudinary.uploader.destroy(`brands/${matches?.[1]}`, (error, result) => {
           if (error) {
             console.error('Failed to delete image:', error)
             // Xử lý lỗi
@@ -211,12 +209,11 @@ class BrandsController {
             status: 'Error',
             message: 'Brands not found',
           })
-        } else {
+        }
           return res.status(200).json({
             status: 'Success',
             message: 'Brands have been deleted successfully !!!',
           })
-        }
       }
     } catch (error) {
       return res.status(500).json({
@@ -238,12 +235,11 @@ class BrandsController {
           }
         }),
       })
-    } else {
+    }
       return res.status(404).json({
         status: 'Error',
         message: 'Brands not found',
       })
-    }
   }
 }
 export default BrandsController

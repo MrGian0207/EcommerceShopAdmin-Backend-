@@ -1,7 +1,7 @@
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import dotenv from 'dotenv'
-import express, { Express } from 'express'
+import express, { type Express } from 'express'
 import methodOverride from 'method-override'
 
 import ConnectMongoDB from './config/connectionDB'
