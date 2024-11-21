@@ -34,7 +34,6 @@ indexRouter.post('/', (req, res) => {
 
   console.log('Headers:', req.headers)
   console.log({ PAYJP_WEBHOOK_SECRET })
-  console.log(req)
 
   const signature = req.headers['x-payjp-webhook-token']
   if (!signature) {
@@ -45,7 +44,9 @@ indexRouter.post('/', (req, res) => {
   if (!PAYJP_WEBHOOK_SECRET) {
     throw new Error('it has not webhook secret')
   }
-  const body = req.body.toString() // req.body là Buffer vì sử dụng bodyParser.raw
+
+  console.log({ body: req.body })
+  const body = req.body // req.body là Buffer vì sử dụng bodyParser.raw
 
   if (PAYJP_WEBHOOK_SECRET !== signature) {
     console.error('Invalid webhook signature')
