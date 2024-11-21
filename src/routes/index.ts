@@ -36,7 +36,7 @@ indexRouter.post('/', (req, res) => {
   console.log({ PAYJP_WEBHOOK_SECRET })
   console.log(req)
 
-  const signature = req.headers['payjp-signature']
+  const signature = req.headers['x-payjp-webhook-token']
   if (!signature) {
     console.error('Missing signature header')
     return res.status(400).send('Missing signature header')
@@ -45,11 +45,9 @@ indexRouter.post('/', (req, res) => {
   if (!PAYJP_WEBHOOK_SECRET) {
     throw new Error('it has not webhook secret')
   }
-  // Tạo HMAC để xác thực
   const body = req.body.toString() // req.body là Buffer vì sử dụng bodyParser.raw
-  const hmac = createHmac('sha256', PAYJP_WEBHOOK_SECRET).update(body).digest('hex')
 
-  if (hmac !== signature) {
+  if (PAYJP_WEBHOOK_SECRET !== signature) {
     console.error('Invalid webhook signature')
     return res.status(403).send('Invalid signature')
   }
