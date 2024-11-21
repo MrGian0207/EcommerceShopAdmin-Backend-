@@ -1,3 +1,4 @@
+import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import dotenv from 'dotenv'
@@ -37,6 +38,8 @@ app.use(
     preflightContinue: false,
   })
 )
+
+app.use('/', bodyParser.raw({ type: 'application/json' }))
 
 app.use(cookieParser())
 
