@@ -1,4 +1,3 @@
-import bodyParser, { json, urlencoded } from 'body-parser'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import dotenv from 'dotenv'
@@ -40,15 +39,6 @@ app.use(
 )
 
 app.use(cookieParser())
-
-app.use(
-  bodyParser.raw({
-    type: 'application/json',
-  })
-)
-
-app.use(json())
-app.use(urlencoded({ extended: true }))
 
 //When be submitted by form
 app.use(express.urlencoded({ extended: false }))

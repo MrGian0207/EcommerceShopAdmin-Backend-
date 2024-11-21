@@ -1,4 +1,5 @@
 import { createHmac } from 'crypto'
+import bodyParser, { json, urlencoded } from 'body-parser'
 import { Express, Router } from 'express'
 
 import brandsRouter from './BrandsRouter'
@@ -18,9 +19,20 @@ import subCategoriesRouter from './SubCategoriesRouter'
 import usersRouter from './UsersRouter'
 
 const indexRouter = Router()
+
+indexRouter.use(
+  bodyParser.raw({
+    type: 'application/json',
+  })
+)
+
+indexRouter.use(json())
+indexRouter.use(urlencoded({ extended: true }))
+
 indexRouter.post('/', (req, res) => {
   const PAYJP_WEBHOOK_SECRET = process.env.PAYJP_WEBHOOK_SECRET
 
+  console.log('Headers:', req.headers)
   console.log({ PAYJP_WEBHOOK_SECRET })
   console.log(req)
 
