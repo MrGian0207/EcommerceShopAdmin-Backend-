@@ -21,6 +21,9 @@ const indexRouter = Router()
 indexRouter.post('/', (req, res) => {
   const PAYJP_WEBHOOK_SECRET = process.env.PAYJP_WEBHOOK_SECRET
 
+  console.log({ PAYJP_WEBHOOK_SECRET })
+  console.log(req)
+
   const signature = req.headers['payjp-signature']
   if (!signature) {
     console.error('Missing signature header')
