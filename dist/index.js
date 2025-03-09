@@ -38,7 +38,7 @@ app.use((0, cors_1.default)({
 app.use((0, cookie_parser_1.default)());
 //When be submitted by form
 app.use(express_1.default.urlencoded({ extended: false }));
-//for fetch, Https, exios when submitted
+//for fetch, Https, axios when submitted
 app.use(express_1.default.json({ limit: '50mb' }));
 //methodOverride
 app.use((0, method_override_1.default)());

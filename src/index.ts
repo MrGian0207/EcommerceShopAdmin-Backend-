@@ -43,13 +43,11 @@ app.use(cookieParser())
 //When be submitted by form
 app.use(express.urlencoded({ extended: false }))
 
-//for fetch, Https, exios when submitted
+//for fetch, Https, axios when submitted
 app.use(express.json({ limit: '50mb' }))
 
 //methodOverride
 app.use(methodOverride())
-
-ConnectMongoDB()
 
 Route(app)
 
